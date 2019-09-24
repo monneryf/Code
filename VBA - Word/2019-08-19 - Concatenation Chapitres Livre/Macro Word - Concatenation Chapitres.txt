@@ -1,0 +1,169 @@
+Sub Generation_Titre(ByRef Number, ByRef Title)
+' Générer le titre du fichier texte à ouvrir
+
+    Number = Number + 1
+    
+    If Number < 10 Then Under_Number = "00" & Number
+    If Number >= 10 And Number < 100 Then Under_Number = "0" & Number
+    If Number >= 100 Then Under_Number = "" & Number
+    
+    Title = "Chapitre_" & Under_Number & ".docx"
+
+End Sub
+
+
+Sub Compteur()
+' Vérifier le bon fonctionnement du compteur
+
+    Dim Number As Integer
+    Dim Title As String
+    
+    Number = -1
+    Title = ""
+    
+    For chapitre = 0 To 141
+    
+        Call Generation_Titre(Number, Title)
+        
+        Selection.TypeText Text:=Title
+        Selection.TypeParagraph
+    
+    Next chapitre
+    
+End Sub
+
+Sub Selection_Repertoire()
+' Sélection du répertoire du fichier
+
+Dim Path, NameF, Path_Name As String
+
+    Path = "C:\Users\monne\Desktop"
+    NameF = "Chapitres - 2019-08-19"
+    Separator = "\"
+    Path_Name = Path & Separator & NameF
+    
+    ChangeFileOpenDirectory Path_Name
+    
+End Sub
+
+
+Sub Ouverture_Fichier(ByVal NameFile)
+' Ouvrir le fichier passé en paramètre
+
+    Call Selection_Repertoire
+    Documents.Open FileName:=NameFile, _
+                    ConfirmConversions:=False, _
+                    ReadOnly:=False, _
+                    AddToRecentFiles:=False, _
+                    PasswordDocument:="", _
+                    PasswordTemplate:="", _
+                    Revert:=False, _
+                    WritePasswordDocument:="", _
+                    WritePasswordTemplate:="", _
+                    Format:=wdOpenFormatAuto, _
+                    XMLTransform:=""
+
+End Sub
+
+Public Sub Concatenation()
+' Contanetation des chapitres
+
+    Dim Number As Integer
+    Dim Title As String
+    Dim Nombre_Chapitre As Integer
+    
+    Number = -1
+    Title = ""
+    Nombre_Chapitre = 141
+    
+    For chapitre = 0 To Nombre_Chapitre
+    
+        ' Ouverture du fichier à copier
+        Call Generation_Titre(Number, Title)
+        
+        Ouverture_Fichier (Title)
+        
+        ' Copie du texte
+        Selection.WholeStory
+        Selection.Copy
+        
+        ' Collage du texte
+        Windows("Book.docx").Activate
+        Application.WindowState = wdWindowStateNormal
+        Selection.PasteAndFormat (wdFormatOriginalFormatting)
+        
+        ' Insertion des sauts de page
+        Call TypePage
+        
+        ' Fermeture du fichier
+        Windows(Title).Activate
+        ActiveWindow.Close
+    
+    Next chapitre
+
+End Sub
+
+
+Sub TypePage()
+' Insère le nombre de saut de pages en fonction du numéro de page
+
+    Dim objPage As Pages
+    Dim numPage, numPageRound As Integer
+    Dim numPageDiv As Variant
+    
+    Set objPage = ActiveDocument.ActiveWindow.Panes(1).Pages
+    numPage = objPage.Count
+    
+    NumSautPage = 1
+    
+    numPageDiv = numPage / 2
+    numPageRound = Math.Round(numPage / 2, 0)
+    
+    If numPageDiv = numPageRound Then
+        Result = 1
+        Else: Result = 2
+    End If
+    
+    For NumSautPage = 1 To Result
+        Selection.InsertBreak Type:=wdPageBreak
+    Next NumSautPage
+    
+End Sub
+
+
+Sub Application_Titre()
+' Application du style sur le titre du paragraphe
+
+    ' Ouverture du fichier à copier
+    Call Ouverture_Fichier("Chapitre_000.docx")
+    
+    ' Copie du texte
+    Selection.WholeStory
+    Selection.Copy
+
+    ' Collage du texte
+    Windows("Book - Copie.docx").Activate
+    Application.WindowState = wdWindowStateNormal
+    Selection.PasteAndFormat (wdFormatOriginalFormatting)
+    
+    ' Application du titre
+    Selection.HomeKey Unit:=wdStory
+    Selection.MoveDown Unit:=wdLine, Count:=9
+    Selection.EndKey Unit:=wdLine, Extend:=wdExtend
+    Selection.Style = ActiveDocument.Styles("Heading 2")
+    
+    ' Copie du texte
+    Selection.WholeStory
+    Selection.Copy
+    
+    ' Effacer le tampon
+    Selection.WholeStory
+    Selection.Collapse
+    
+    ' Collage du texte
+    Windows("Book.docx").Activate
+    Application.WindowState = wdWindowStateNormal
+    Selection.PasteAndFormat (wdFormatOriginalFormatting)
+    
+End Sub
+

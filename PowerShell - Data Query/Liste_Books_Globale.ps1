@@ -1,5 +1,5 @@
 ﻿$Path = 'E:\Books'
-$Destination = 'C:\Users\monne\Desktop\Liste Books Global'
+$Destination = 'C:\Users\monne\Desktop'
 
 $File = $Destination + '\Liste Books Globale.txt'
 

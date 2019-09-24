@@ -1,4 +1,4 @@
-﻿$Path = 'G:\Series 2018'
+﻿$Path = 'F:\Series'
 $Destination = 'C:\Users\monne\Desktop\Liste_Musique_Fichiers'
 
 

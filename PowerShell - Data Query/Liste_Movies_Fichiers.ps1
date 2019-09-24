@@ -1,5 +1,5 @@
-﻿$Path = 'F:\Movies'
-$Destination = 'C:\Users\monne\Desktop\Listes Movies Category'
+﻿$Path = 'G:\Movies'
+$Destination = 'C:\Users\monne\Desktop\Liste Movies Category'
 
 foreach ($Repertoire in Get-ChildItem -Path $Path -Director)
 {

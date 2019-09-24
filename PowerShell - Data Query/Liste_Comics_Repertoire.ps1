@@ -1,5 +1,5 @@
 ﻿$Path = 'E:\Bandes dessinées'
-$Destination = 'C:\Users\monne\Desktop\Liste BD Repertoire'
+$Destination = 'C:\Users\monne\Desktop'
 
 $File = $Destination + '\Liste Comics Global.txt'
 

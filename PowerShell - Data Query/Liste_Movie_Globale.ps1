@@ -1,4 +1,4 @@
-﻿$Path = 'F:\Movies'
+﻿$Path = 'G:\Movies'
 $Destination = 'C:\Users\monne\Desktop\'
 
 $File = $Destination + '\Liste_Movie_Globale.txt'

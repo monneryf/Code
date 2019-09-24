@@ -1,5 +1,5 @@
-﻿$Path = 'G:\Series 2018'
-$Destination = 'C:\Users\monne\Desktop\Liste Series Globals'
+﻿$Path = 'F:\Series'
+$Destination = 'C:\Users\monne\Desktop\'
 
 $File = $Destination + '\Liste Series Global.txt'
 

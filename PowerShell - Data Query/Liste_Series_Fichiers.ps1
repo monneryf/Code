@@ -1,4 +1,4 @@
-﻿$Path = 'G:\Series 2018'
+﻿$Path = 'F:\Series'
 $Destination = 'C:\Users\monne\Desktop\Listes_Series'
 
 foreach ($Repertoire in Get-ChildItem -Path $Path -Director)

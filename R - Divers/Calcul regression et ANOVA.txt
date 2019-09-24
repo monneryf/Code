@@ -1,0 +1,420 @@
+> data <- read.csv('c:/users/monne/desktop/data.txt')
+Error in read.table(file = file, header = header, sep = sep, quote = quote,  : 
+  plus de colonnes que de noms de colonnes
+> data <- read.csv('c:/users/monne/desktop/data.txt',sep=';')
+> View(data)
+> ggplot2(data=data,aes(x=T12,y=maxO3)+geompoint()+xlab("T12")+ylab("maxO3") 
++ )
+Error in ggplot2(data = data, aes(x = T12, y = maxO3) + geompoint() +  : 
+  could not find function "ggplot2"
+> ggplot2(data=data,aes(x=T12,y=maxO3))+geompoint()+xlab("T12")+ylab("maxO3") 
+Error in ggplot2(data = data, aes(x = T12, y = maxO3)) : 
+  could not find function "ggplot2"
+> library("ggplot2", lib.loc="C:/Users/monne/Anaconda3/Lib/R/library")
+> ggplot2(data=data,aes(x=T12,y=maxO3))+geompoint()+xlab("T12")+ylab("maxO3") 
+Error in ggplot2(data = data, aes(x = T12, y = maxO3)) : 
+  could not find function "ggplot2"
+> ggplot(data=data,aes(x=T12,y=maxO3))+geompoint()+xlab("T12")+ylab("maxO3") 
+Error in geompoint() : could not find function "geompoint"
+> ggplot(data=data,aes(x=T12,y=maxO3))+geom_point()+xlab("T12")+ylab("maxO3") 
+> reg_simple <- lm(T12~maxO3,data=data)
+Warning messages:
+1: In model.response(mf, "numeric") :
+  l'utilisation de type="numeric" avec une réponse de type facteur sera ignorée
+2: In Ops.factor(y, z$residuals) : ‘-’ not meaningful for factors
+> reg_simple <- lm(maxO3~T12,data=data)
+> summary(reg_simple)
+
+Call:
+lm(formula = maxO3 ~ T12, data = data)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-20.00  -0.25   0.00   1.00  24.75 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  6.000e+01  1.416e+01   4.237 0.000163 ***
+T1214,3     -1.800e+01  2.002e+01  -0.899 0.375032    
+T1214,5     -1.500e+01  2.002e+01  -0.749 0.458962    
+T1215,6      1.400e+01  1.734e+01   0.807 0.425107    
+T1216,3      5.000e+00  2.002e+01   0.250 0.804327    
+T1216,8     -5.000e+00  2.002e+01  -0.250 0.804327    
+T1217,1      1.000e+01  2.002e+01   0.499 0.620724    
+T1217,3     -4.000e+00  2.002e+01  -0.200 0.842863    
+T1217,4      2.300e+01  2.002e+01   1.149 0.258743    
+T1217,5      1.900e+01  2.002e+01   0.949 0.349402    
+T1217,6      3.200e+01  1.734e+01   1.845 0.073726 .  
+T1217,7      1.500e+01  1.583e+01   0.948 0.350062    
+T1217,8      4.100e+01  2.002e+01   2.047 0.048400 *  
+T1217,9      1.100e+01  2.002e+01   0.549 0.586373    
+T1218        1.100e+01  2.002e+01   0.549 0.586373    
+T1218,2      2.825e+01  1.583e+01   1.784 0.083270 .  
+T1218,3     -1.000e+00  2.002e+01  -0.050 0.960464    
+T1218,4      2.200e+01  2.002e+01   1.099 0.279641    
+T1218,5      2.700e+01  2.002e+01   1.348 0.186463    
+T1218,6      1.100e+01  1.635e+01   0.673 0.505633    
+T1218,7      4.000e+00  1.734e+01   0.231 0.818964    
+T1218,8      1.900e+01  2.002e+01   0.949 0.349402    
+T1218,9      6.000e+00  2.002e+01   0.300 0.766283    
+T1219,1      2.233e+01  1.635e+01   1.366 0.180922    
+T1219,2      1.100e+01  2.002e+01   0.549 0.586373    
+T1219,3      4.100e+01  2.002e+01   2.047 0.048400 *  
+T1219,4      3.600e+01  2.002e+01   1.798 0.081097 .  
+T1219,6      2.650e+01  1.734e+01   1.528 0.135739    
+T1219,7      4.600e+01  1.734e+01   2.653 0.012052 *  
+T1219,8      1.533e+01  1.635e+01   0.938 0.354953    
+T1220        1.700e+01  2.002e+01   0.849 0.401844    
+T1220,2      1.800e+01  2.002e+01   0.899 0.375032    
+T1220,3      1.900e+01  1.635e+01   1.162 0.253297    
+T1220,4      2.400e+01  2.002e+01   1.199 0.239000    
+T1220,5      1.733e+01  1.635e+01   1.060 0.296554    
+T1220,6      3.000e+00  2.002e+01   0.150 0.881795    
+T1220,7      1.700e+01  2.002e+01   0.849 0.401844    
+T1220,8      1.250e+01  1.734e+01   0.721 0.475959    
+T1221        1.100e+01  2.002e+01   0.549 0.586373    
+T1221,1      7.000e+00  2.002e+01   0.350 0.728818    
+T1221,2      1.200e+01  2.002e+01   0.599 0.552970    
+T1221,3      1.600e+01  2.002e+01   0.799 0.429827    
+T1221,4      1.278e-13  2.002e+01   0.000 1.000000    
+T1221,6      9.000e+00  1.734e+01   0.519 0.607139    
+T1221,9      2.900e+01  1.734e+01   1.672 0.103653    
+T1222        2.800e+01  2.002e+01   1.398 0.171084    
+T1222,2      1.800e+01  2.002e+01   0.899 0.375032    
+T1222,4      9.000e+00  1.734e+01   0.519 0.607139    
+T1222,5      2.200e+01  1.734e+01   1.269 0.213198    
+T1222,7      1.300e+01  1.734e+01   0.750 0.458632    
+T1222,8      3.800e+01  2.002e+01   1.898 0.066258 .  
+T1222,9      3.150e+01  1.734e+01   1.816 0.078132 .  
+T1223        2.200e+01  1.734e+01   1.269 0.213198    
+T1223,4      7.000e+00  2.002e+01   0.350 0.728818    
+T1223,5      4.800e+01  2.002e+01   2.397 0.022169 *  
+T1223,7      4.300e+01  1.734e+01   2.480 0.018270 *  
+T1223,8      5.600e+01  2.002e+01   2.797 0.008438 ** 
+T1224,2      6.100e+01  2.002e+01   3.046 0.004457 ** 
+T1224,4      5.200e+01  2.002e+01   2.597 0.013802 *  
+T1224,6      8.500e+01  2.002e+01   4.245 0.000160 ***
+T1224,8      5.300e+01  2.002e+01   2.647 0.012224 *  
+T1225,1      2.100e+01  2.002e+01   1.049 0.301710    
+T1225,2      5.600e+01  1.734e+01   3.229 0.002752 ** 
+T1226,3      3.900e+01  1.734e+01   2.249 0.031109 *  
+T1226,9      7.300e+01  1.734e+01   4.209 0.000177 ***
+T1227,2      1.060e+02  2.002e+01   5.293 7.14e-06 ***
+T1227,6      8.900e+01  2.002e+01   4.445 8.91e-05 ***
+T1227,7      9.300e+01  2.002e+01   4.644 4.94e-05 ***
+T1228,3      9.900e+01  2.002e+01   4.944 2.03e-05 ***
+T1228,4      5.850e+01  1.734e+01   3.373 0.001867 ** 
+T1228,6      8.600e+01  2.002e+01   4.295 0.000138 ***
+T1229,5      6.600e+01  2.002e+01   3.296 0.002301 ** 
+T1229,6      1.000e+02  2.002e+01   4.994 1.75e-05 ***
+T1229,8      5.600e+01  2.002e+01   2.797 0.008438 ** 
+T1230,1      7.900e+01  2.002e+01   3.945 0.000379 ***
+T1230,5      9.600e+01  2.002e+01   4.794 3.17e-05 ***
+T1232,7      8.600e+01  2.002e+01   4.295 0.000138 ***
+T1233,5      9.900e+01  2.002e+01   4.944 2.03e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 14.16 on 34 degrees of freedom
+Multiple R-squared:  0.9227,	Adjusted R-squared:  0.7477 
+F-statistic: 5.271 on 77 and 34 DF,  p-value: 4.212e-07
+
+> is.numeric(data$T12)
+[1] FALSE
+> data <- read.csv('c:/users/monne/desktop/data.txt',sep=';',dec=",")
+> View(data)
+> is.numeric(data$T12)
+[1] TRUE
+> reg <- lm(maxO3~T12,data=data)
+> summary(reg)
+
+Call:
+lm(formula = maxO3 ~ T12, data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-38.079 -12.735   0.257  11.003  44.671 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -27.4196     9.0335  -3.035    0.003 ** 
+T12           5.4687     0.4125  13.258   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 17.57 on 110 degrees of freedom
+Multiple R-squared:  0.6151,	Adjusted R-squared:  0.6116 
+F-statistic: 175.8 on 1 and 110 DF,  p-value: < 2.2e-16
+
+> abs <- seq(min(data$T12),max(data$T12),100)
+> ord <- abs*5.4687 -27.4196
+> ggplot(aes(x=abs,y=ord)+geom_point(())
+Error: unexpected ')' in "ggplot(aes(x=abs,y=ord)+geom_point(()"
+> ggplot(aes(x=abs,y=ord))+geom_point()
+Error: ggplot2 doesn't know how to deal with data of class uneval
+> plot(abs,ord)
+> View(abs)
+> abs
+[1] 14
+> min(data$T12
++ )
+[1] 14
+> max(data$T12)
+[1] 33.5
+> seq(14,30,100)
+[1] 14
+> abs <- seq(min(data$T12),to=max(data$T12),by=0.5)
+> ord <- abs*5.4687 -27.4196
+> plot(abs,ord)
+> reg_multi <- lm(maxO3~T9+T12+T15+Ne9+Ne12+Ne15+MaxO3v,data=date)
+Error in terms.formula(formula, data = data) : 
+  l'argument 'data' est d'un mauvais type
+> reg_multi <- lm(maxO3~T9+T12+T15+Ne9+Ne12+Ne15+MaxO3v,data=data)
+Error in eval(predvars, data, env) : object 'MaxO3v' not found
+> reg_multi <- lm(maxO3~T9+T12+T15+Ne9+Ne12+Ne15+maxO3v,data=data)
+> summary(reg_multi)
+
+Call:
+lm(formula = maxO3 ~ T9 + T12 + T15 + Ne9 + Ne12 + Ne15 + maxO3v, 
+    data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-57.768  -7.845  -1.359   8.134  38.984 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 12.70548   13.10860   0.969  0.33467    
+T9          -0.63596    1.03462  -0.615  0.54011    
+T12          2.50600    1.39946   1.791  0.07625 .  
+T15          0.71381    1.13674   0.628  0.53142    
+Ne9         -2.76057    0.89157  -3.096  0.00252 ** 
+Ne12        -0.37193    1.34590  -0.276  0.78283    
+Ne15         0.09028    0.99934   0.090  0.92819    
+maxO3v       0.37774    0.06121   6.171 1.32e-08 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 14.43 on 104 degrees of freedom
+Multiple R-squared:  0.7546,	Adjusted R-squared:  0.738 
+F-statistic: 45.68 on 7 and 104 DF,  p-value: < 2.2e-16
+
+> reg_multi <- lm(maxO3~T12+Ne9+maxO3v,data=data)
+> summaru(reg_multi)
+Error in summaru(reg_multi) : could not find function "summaru"
+> summary(reg_multi)
+
+Call:
+lm(formula = maxO3 ~ T12 + Ne9 + maxO3v, data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-56.385  -7.872  -1.941   7.899  41.513 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  9.76225   11.10038   0.879    0.381    
+T12          2.85308    0.48052   5.937 3.57e-08 ***
+Ne9         -3.02423    0.64342  -4.700 7.71e-06 ***
+maxO3v       0.37571    0.05801   6.477 2.85e-09 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 14.23 on 108 degrees of freedom
+Multiple R-squared:  0.752,	Adjusted R-squared:  0.7451 
+F-statistic: 109.1 on 3 and 108 DF,  p-value: < 2.2e-16
+
+> a_prevoir <- data.frame(T12=15,Ne9=2,maxO3v=100)
+> max_O3_prev <- predict(reg_multi,a_prevoir)
+> max_O3_prev
+       1 
+84.08126 
+> data2 <- read.csv('c:/users/monne/desktop/data2.txt',header=TRUE,sep=";",dec=",")
+> View(data2)
+> is.numeric(tobacco)
+Error: object 'tobacco' not found
+> is.numeric(data2$tobacco)
+[1] FALSE
+> data2 <- read.csv('c:/users/monne/desktop/data2.txt',header=TRUE,sep=";",dec=".")
+> View(data2)
+> is.numeric(data2$tobacco)
+[1] TRUE
+> ggplot(data=data2,aes=(x=age,y=chd))+geom_point()
+Error: unexpected ',' in "ggplot(data=data2,aes=(x=age,"
+> ggplot(data=data2)+aes=(x=age,y=chd)+geom_point()
+Error: unexpected ',' in "ggplot(data=data2)+aes=(x=age,"
+> ggplot(data=data2)+aes(x=age,y=chd)+geom_point()
+> reg_log <- glm(chd~tobacco,familiy="binomial",data=data2)
+Error in glm.control(familiy = "binomial") : 
+  unused argument (familiy = "binomial")
+> reg_log <- glm(chd~tobacco,family="binomial",data=data2)
+> summaru(reg_log)
+Error in summaru(reg_log) : could not find function "summaru"
+> Summary.(reg_log)
+Error in Summary.(reg_log) : could not find function "Summary."
+> Summary(reg_log)
+Error in (function (classes, fdef, mtable)  : 
+  impossible de trouver une méthode héritée pour la fonction ‘Summary’ pour la signature ‘"glm"’
+> summary(reg_log)
+
+Call:
+glm(formula = chd ~ tobacco, family = "binomial", data = data2)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.9397  -0.8467  -0.7290   1.1997   1.7060  
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -1.18943    0.13900  -8.557  < 2e-16 ***
+tobacco      0.14527    0.02476   5.866 4.46e-09 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 596.11  on 461  degrees of freedom
+Residual deviance: 554.65  on 460  degrees of freedom
+AIC: 558.65
+
+Number of Fisher Scoring iterations: 4
+
+> beta1 <- reg_log$coefficients[1]
+> beta2 <- reg_log$coefficients[2]
+> coef <- c(beta1,beta2)
+> coef
+(Intercept)     tobacco 
+ -1.1894300   0.1452696 
+> ble <- read.csv('c:/users/monne/desktop/data3.txt',HEADER=TRUE,sep=';',dec=".")
+Error in read.table(file = file, header = header, sep = sep, quote = quote,  : 
+  unused argument (HEADER = TRUE)
+> ble <- read.table('c:/users/monne/desktop/data3.txt',HEADER=TRUE,sep=';',dec=".")
+Error in read.table("c:/users/monne/desktop/data3.txt", HEADER = TRUE,  : 
+  unused argument (HEADER = TRUE)
+> ble <- read.csv('c:/users/monne/desktop/data3.txt',header=TRUE,sep=';',dec=".")
+> View(ble)
+> ggplot(data=ble)+aes(x=variete,y=rdt)+geom_boxplot()+ggtitle("BoxPlot Rendement")+labs(x="Variété",y="Rendement")
+> anova_variete <- lm(rdt~variete,data=ble)
+> summary(anova_variete)
+
+Call:
+lm(formula = rdt ~ variete, data = ble)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-344.20  -69.30   -6.60   89.15  329.90 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  5633.80      26.30 214.211  < 2e-16 ***
+varieteV2     -49.70      37.19  -1.336  0.18546    
+varieteV3    -169.20      37.19  -4.549    2e-05 ***
+varieteV4     118.40      37.19   3.183  0.00211 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 117.6 on 76 degrees of freedom
+Multiple R-squared:  0.4476,	Adjusted R-squared:  0.4258 
+F-statistic: 20.53 on 3 and 76 DF,  p-value: 7.674e-10
+
+> anova(anova_variete)
+Analysis of Variance Table
+
+Response: rdt
+          Df  Sum Sq Mean Sq F value    Pr(>F)    
+variete    3  851845  283948  20.525 7.674e-10 ***
+Residuals 76 1051387   13834                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> anova_phyto <- lm(rdt~phyto,data=ble)
+> anova(anova_phyto)
+Analysis of Variance Table
+
+Response: rdt
+          Df  Sum Sq Mean Sq F value Pr(>F)
+phyto      1    1008  1008.2  0.0413 0.8394
+Residuals 78 1902223 24387.5               
+> anova_variete_phyto <- lm(rdt~variete+phyto,data=ble)
+> anova(anova_variete_phyto)
+Analysis of Variance Table
+
+Response: rdt
+          Df  Sum Sq Mean Sq F value   Pr(>F)    
+variete    3  851845  283948  20.275 1.01e-09 ***
+phyto      1    1008    1008   0.072   0.7892    
+Residuals 75 1050379   14005                     
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> anova_variete_phyto <- lm(rdt~variete*phyto,data=ble)
+> anova(anova_variete_phyto)
+Analysis of Variance Table
+
+Response: rdt
+              Df  Sum Sq Mean Sq F value    Pr(>F)    
+variete        3  851845  283948 19.5749 2.205e-09 ***
+phyto          1    1008    1008  0.0695    0.7928    
+variete:phyto  3    5968    1989  0.1371    0.9375    
+Residuals     72 1044411   14506                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> anova_variete <- lm(rdt~variete,data=ble)
+> 
+> summary(anova_variete)
+
+Call:
+lm(formula = rdt ~ variete, data = ble)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-344.20  -69.30   -6.60   89.15  329.90 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  5633.80      26.30 214.211  < 2e-16 ***
+varieteV2     -49.70      37.19  -1.336  0.18546    
+varieteV3    -169.20      37.19  -4.549    2e-05 ***
+varieteV4     118.40      37.19   3.183  0.00211 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 117.6 on 76 degrees of freedom
+Multiple R-squared:  0.4476,	Adjusted R-squared:  0.4258 
+F-statistic: 20.53 on 3 and 76 DF,  p-value: 7.674e-10
+
+> anova_variete <- lm(rdt~variete,data=ble)
+> 
+> 
+> summary(anova_variete)
+
+Call:
+lm(formula = rdt ~ variete, data = ble)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-344.20  -69.30   -6.60   89.15  329.90 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  5633.80      26.30 214.211  < 2e-16 ***
+varieteV2     -49.70      37.19  -1.336  0.18546    
+varieteV3    -169.20      37.19  -4.549    2e-05 ***
+varieteV4     118.40      37.19   3.183  0.00211 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 117.6 on 76 degrees of freedom
+Multiple R-squared:  0.4476,	Adjusted R-squared:  0.4258 
+F-statistic: 20.53 on 3 and 76 DF,  p-value: 7.674e-10
+
+> beta1 <- anova_variete$coefficients[1]
+> beta2 <- anova_variete$coefficients[2]
+> beta3 <- anova_variete$coefficients[3]
+> coefs <- c(beta1,beta2,beta3)
+> coefs
+(Intercept)   varieteV2   varieteV3 
+     5633.8       -49.7      -169.2 
+> other_parameter <- anova_variete$effects[1]
+> other_parameter
+(Intercept) 
+  -50165.51 
+
