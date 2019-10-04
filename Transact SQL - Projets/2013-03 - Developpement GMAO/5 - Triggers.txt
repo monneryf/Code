@@ -1,0 +1,267 @@
+
+---------------------------------------------------------------------------------
+-- Ajuste la date d'intervention quand la date de création est postérieure à la date d'affectation
+---------------------------------------------------------------------------------
+
+/****** Object:  Trigger [dbo].[AjusteDate]    Script Date: 07/04/2013 14:18:48 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TRIGGER [dbo].[AjusteDate] 
+   ON  [dbo].[Intervention] 
+   AFTER UPDATE
+AS 
+BEGIN
+
+Declare @EtatPrevious int
+Declare @EtatNext int
+Declare @Creation datetime
+Declare @DateJour datetime
+Declare @NumInter int
+Declare @Ecart int
+	
+	SET NOCOUNT ON;
+
+	if UPDATE(idService)
+	BEGIN
+		
+		SELECT @EtatPrevious = idEtat from deleted
+		SELECT @EtatNext = idEtat from inserted
+		SELECT @NumInter = idIntervention from inserted
+		SELECT @Creation = DateCreation from inserted
+		
+			if @EtatPrevious = 1 and @EtatNext = 2
+			BEGIN
+				EXEC AjusteDateInter @NumInter,@Creation
+			END
+	END
+END
+
+
+
+---------------------------------------------------------------------------------
+-- Création de la future intervention préventive après clôture
+---------------------------------------------------------------------------------
+
+CREATE TRIGGER dbo.Cloture 
+   ON  dbo.Intervention 
+   AFTER UPDATE
+AS 
+BEGIN
+	SET NOCOUNT ON;
+	declare @NumInter int
+	declare @NumEtat int
+	declare @PrevGen int
+	
+    if update(idEtat)
+    BEGIN
+    select @NumEtat = idEtat from inserted
+    select @PrevGen = PrevGenere from inserted
+		if @NumEtat = 7 and @PrevGen = 0
+		
+			BEGIN
+			
+			select @NumInter = idIntervention 
+						from inserted
+						
+				EXEC DemandePrev @NumInter
+			END
+	END
+END
+GO
+
+---------------------------------------------------------------------------------
+-- Création d'une demande préventive après création d'une nouvelle fiche préventive
+---------------------------------------------------------------------------------
+
+CREATE TRIGGER dbo.FirstDemande 
+   ON  dbo.FichePreventive 
+   AFTER INSERT
+AS 
+BEGIN
+		SET NOCOUNT ON;
+
+	declare @actif int
+	declare @NumFP int
+	
+	select @NumFP = idFichePreventive from inserted
+	select @actif = Actif from inserted
+	
+	if @actif = -1
+	BEGIN
+		EXEC NewFP @NumFP
+	END
+	
+END
+
+GO
+
+---------------------------------------------------------------------------------
+-- Création d'une intervention lors du changement du champ Etat de la table Demande
+---------------------------------------------------------------------------------
+
+/****** Object:  Trigger [dbo].[ChangeEtat]    Script Date: 07/19/2013 18:01:11 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER TRIGGER [dbo].[ChangeEtat] 
+   ON  [dbo].[Demande] 
+   AFTER INSERT,UPDATE
+AS 
+BEGIN
+DECLARE @Ajout table (numero int);  
+declare @EtatDem int
+declare @EtatDemPrevious int
+declare @NumDem int
+declare @TypeDem int
+declare @Numero int
+declare @NumFP int
+declare @Service int
+declare @DateCreation datetime
+declare @DebutArret datetime
+
+	SET NOCOUNT ON;
+	if UPDATE(EtatDemande)
+	BEGIN
+		select @EtatDem = EtatDemande from inserted
+		select @EtatDemPrevious = EtatDemande from deleted
+		select @DebutArret = DebutArret from inserted
+		
+		if @EtatDem = -1 and coalesce(@EtatDemPrevious,0) = 0
+		BEGIN
+			select @NumDem = idDemande	from inserted
+			select @TypeDem = idTypeDemande	from inserted
+			select @NumFP = idFichePreventive from inserted
+			select @DateCreation = DatePrevision from inserted
+			select @Service = idService from inserted
+			insert into Intervention 
+				(idDemande,idEtat,idDetail,DateCreation,idService)
+				output inserted.idIntervention 
+				into @AJOUT 
+				VALUES
+				(@NumDem,1,4,@DateCreation,@Service)
+			
+			select @Numero = numero from @Ajout
+			
+			if coalesce(@DebutArret,0) <> 0
+			BEGIN	
+				INSERT INTO Realisation
+					(idIntervention,DebutArret)
+					VALUES(@Numero,@DebutArret)	
+			END
+			
+			if @TypeDem = 2 and coalesce(@NumFP,0)>0
+			BEGIN
+				
+				INSERT INTO action
+				(Numero,Libelle,Observation,idCompteur,EstRealise,
+				idIntervention)
+				SELECT Numero,Libelle,Observation,
+					   idCompteur,EstRealise,@Numero
+					   FROM ActionMaster
+					WHERE idFichePreventive = @NumFP
+									
+				INSERT INTO PieceJointe
+				(idTypePJ,Contenu,idIntervention)
+				SELECT idTypePJ,Contenu,@Numero
+					FROM PieceJointe
+					WHERE idFichePrev = @NumFP
+					
+			END					
+		END
+	END
+END
+
+GO
+
+---------------------------------------------------------------------------------
+-- Création ou suppression de demande préventive selon MAJ du champ Actif d'une FP
+---------------------------------------------------------------------------------
+
+CREATE TRIGGER dbo.ModifActif 
+   ON  dbo.FichePreventive 
+   AFTER UPDATE
+AS 
+BEGIN
+
+Declare @ActifNew int
+Declare @ActifPrevious int
+Declare @NumFP int
+
+SET NOCOUNT ON;
+
+if UPDATE(Actif)
+	BEGIN
+	
+	select @ActifNew = Actif from inserted
+	select @ActifPrevious = Actif from deleted
+	select @NumFP = idFichePreventive from inserted
+	
+	if @ActifNew = -1 and @ActifPrevious = 0
+		BEGIN
+			EXEC NewFP @NumFP
+		END			
+	if @ActifNew = 0 and @ActifPrevious = -1
+		BEGIN
+			EXEC DeleteFP @NumFP
+		END
+	END
+	
+END
+
+GO
+
+---------------------------------------------------------------------------------
+-- Suppression en cascade des lignes ActionIntervenant lors de la suppression d'une action
+---------------------------------------------------------------------------------
+
+CREATE TRIGGER dbo.Suppression 
+   ON  dbo.Action 
+   AFTER DELETE
+AS 
+BEGIN
+	
+	delete ActionIntervenant
+		from ActionIntervenant as a
+			join deleted as d
+				on a.RefAction = d.RefAction
+
+END
+GO
+
+---------------------------------------------------------------------------------
+-- Mise à jour des valeurs de compteur
+---------------------------------------------------------------------------------
+
+/****** Object:  Trigger [dbo].[MAJ_Valeur_Compteur]    Script Date: 07/23/2013 15:14:28 ******/
+
+CREATE TRIGGER [dbo].[MAJ_Valeur_Compteur]
+			ON [dbo].[Action]
+			AFTER INSERT,UPDATE
+AS
+BEGIN
+SET NOCOUNT ON
+
+declare @ValeurCompteur decimal(18,2)
+declare @idCompteur int
+
+IF update(ValeurCompteur)
+	BEGIN
+		select @ValeurCompteur = ValeurCompteur from inserted
+	
+		IF isnull(@ValeurCompteur,-1) >= 0 
+			BEGIN
+				select @idCompteur = idCompteur from inserted
+				EXEC CalculReleveCompteur @idCompteur,@ValeurCompteur
+			END
+	END
+END
+
+GO
+
+
+
+
+

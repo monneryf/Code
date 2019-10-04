@@ -1,0 +1,20 @@
+SELECT
+	[AccountId],
+	[TranDate],
+	[TranAmt],
+	PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY [TranAmt]) OVER (PARTITION BY [AccountId]) AS SommeD_50,
+	PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY [TranAmt]) OVER (PARTITION BY [AccountId]) AS SommeC_50,
+	PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY [TranAmt]) OVER (PARTITION BY [AccountId]) AS SommeD_75,
+	PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY [TranAmt]) OVER (PARTITION BY [AccountId]) AS SommeC_75
+
+FROM
+	[dbo].[Transactions]
+		
+ORDER BY
+	[AccountId],
+	[TranDate]	
+	;
+	
+GO
+
+

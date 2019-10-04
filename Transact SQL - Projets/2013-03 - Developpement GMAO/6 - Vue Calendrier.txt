@@ -1,0 +1,24 @@
+/****** Object:  View [dbo].[Vue_Calendrier]    Script Date: 07/04/2013 11:29:33 ******/
+
+CREATE VIEW [dbo].[Vue_Calendrier]
+AS
+With entiers
+as
+(select (ent.chiffres-1) as i
+	from 
+	(select top 10 ROW_NUMBER() OVER(ORDER BY idUtilisateur) as chiffres
+		from dbo.GD_utilisateur) as ent)
+
+select CAST(FLOOR(CAST(getdate() AS FLOAT)) AS DATETIME) - chiffre 
+as DateJour 
+from 
+	(select (1000*m.i+100 * c.i + 10*d.i + u.i) as chiffre
+	from entiers u
+	cross join entiers d
+	cross join entiers c
+	cross join entiers m) as Base_10
+
+where getdate() - chiffre > dateAdd(yy,-10,getdate())
+
+GO
+

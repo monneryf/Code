@@ -1,0 +1,77 @@
+/****** Object:  View [dbo].[Vue_Edition_Liste_Intervention]    Script Date: 06/17/2013 18:44:14 ******/
+
+CREATE VIEW [dbo].[Vue_Edition_Liste_Intervention]
+AS
+SELECT     dbo.Intervention.idIntervention, dbo.Demande.Date, dbo.TypeDemande.idTypeDemande, dbo.Demande.EstRonde, EtatIntervention_1.Libelle AS Etat, 
+                      dbo.UAP.Libelle AS Unité, dbo.Priorite.Libelle AS Priorité, dbo.Secteur.Libelle AS Secteur, dbo.GD_utilisateur.login, 
+                      dbo.Equipement.Libelle AS Equipement, dbo.Demande.Description, dbo.Service.Libelle AS Service, EtatIntervention_1.idCouleur, 
+                      dbo.Demande.idUrgence, dbo.Intervention.idService, dbo.Demande.idDemande, dbo.EtatIntervention.idEtat, dbo.UAP.idUAP, dbo.Priorite.idPriorite, 
+                      dbo.Secteur.idSecteur, dbo.Equipement.idEquipement, dbo.Demande.idDemandeur, dbo.Intervention.idDetail, 
+                      dbo.DegreUrgence.Libelle AS [Degré Urgence], dbo.Action.Numero, dbo.Action.Libelle, dbo.Action.Observation, dbo.Action.EstRealise, 
+                      dbo.Action.Intervenants, dbo.UAP.Ordre AS OrdreUAP, dbo.Secteur.Ordre AS OrdreSecteur, dbo.Equipement.Ordre AS OrdreEquipement, 
+                      dbo.Service.Ordre AS OrdreService, dbo.DegreUrgence.Ordre AS OrdreUrgence, dbo.Realisation.TpsArret, EtatIntervention_1.Ordre AS OrdreEtat
+FROM         dbo.Realisation RIGHT OUTER JOIN
+                      dbo.UAP INNER JOIN
+                      dbo.Demande INNER JOIN
+                      dbo.Intervention ON dbo.Demande.idDemande = dbo.Intervention.idDemande INNER JOIN
+                      dbo.Equipement ON dbo.Demande.idEquipement = dbo.Equipement.idEquipement INNER JOIN
+                      dbo.Secteur ON dbo.Demande.idSecteur = dbo.Secteur.idSecteur INNER JOIN
+                      dbo.EtatIntervention ON dbo.Intervention.idEtat = dbo.EtatIntervention.idEtat INNER JOIN
+                      dbo.GD_utilisateur ON dbo.Demande.idDemandeur = dbo.GD_utilisateur.idUtilisateur INNER JOIN
+                      dbo.TypeDemande ON dbo.Demande.idTypeDemande = dbo.TypeDemande.idTypeDemande ON dbo.UAP.idUAP = dbo.Demande.idUAP INNER JOIN
+                      dbo.DegreUrgence ON dbo.Demande.idUrgence = dbo.DegreUrgence.idUrgence INNER JOIN
+                      dbo.Priorite ON dbo.DegreUrgence.idPriorite = dbo.Priorite.idPriorite ON 
+                      dbo.Realisation.idIntervention = dbo.Intervention.idIntervention LEFT OUTER JOIN
+                      dbo.Action ON dbo.Intervention.idIntervention = dbo.Action.idIntervention LEFT OUTER JOIN
+                      dbo.Service ON dbo.Intervention.idService = dbo.Service.idService LEFT OUTER JOIN
+                      dbo.EtatIntervention AS EtatIntervention_1 ON dbo.Intervention.idDetail = EtatIntervention_1.idEtat
+
+GO
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/****** Object:  View [dbo].[Vue_edition_intervention]    Script Date: 04/19/2013 10:23:12 ******/
+SET ANSI_NULLS ON
+GO
+
+CREATE VIEW [dbo].[Vue_Edition_Intervention]
+AS
+SELECT     dbo.Intervention.idIntervention AS [N° Intervention], dbo.Intervention.DateCreation AS [Date demande], dbo.TypeDemande.Libelle AS [Type demande], 
+                      dbo.EtatIntervention.Libelle AS Etat, COALESCE (dbo.Demande.idFichePreventive, 0) AS [Fiche Préventive], dbo.Service.Libelle AS Service, 
+                      dbo.Secteur.idUAP, dbo.Secteur.Libelle AS Secteur, dbo.GD_utilisateur.login AS Demandeur, dbo.Equipement.idEquipement, 
+                      dbo.Equipement.Libelle AS Equipement, dbo.Demande.Description, dbo.DegreUrgence.Libelle AS [Degré d'urgence], dbo.Priorite.Libelle AS Priorité, 
+                      dbo.Demande.Sysdhc AS [Saisie demande], dbo.PriseEnCompte.DatePrevue AS [Date inter prévue], 
+                      dbo.PriseEnCompte.DureePrevue AS [Durée inter prévue], dbo.PriseEnCompte.Observation AS [Observation PEC], 
+                      Intervenant_PEC.Nom AS [Nom intervenant PEC], Intervenant_PEC.Prenom AS [Prénom intervenant PEC], 
+                      Intervenant_PEC.NomCourt AS [NC intervenant PEC], dbo.PriseEnCompte.Sysdhc AS [Saisie PEC], dbo.Realisation.DebutInter AS [Début inter realisée], 
+                      dbo.Realisation.FinInter AS [Fin inter réalisée], dbo.TypeIntervention.Libelle AS [Type d'intervention'], dbo.UAP.Libelle AS Unité, 
+                      dbo.SousEnsemble.Libelle AS [Sous-ensemble], dbo.Realisation.DebutArret AS [Début arrêt réal], dbo.Realisation.FinArret AS [Fin arrêt réal], 
+                      dbo.Realisation.Sysdhc AS [Saisie réal], dbo.Intervention.Sysdhc AS [Saisie intervention], dbo.Activite.Sysdhc AS [Saisie activité], 
+                      dbo.Realisation.Domaine AS [Domaine(s) intervention], dbo.Procede.Libelle AS Procédé
+FROM         dbo.UAP INNER JOIN
+                      dbo.GD_utilisateur INNER JOIN
+                      dbo.Demande INNER JOIN
+                      dbo.Secteur ON dbo.Demande.idSecteur = dbo.Secteur.idSecteur ON dbo.GD_utilisateur.idUtilisateur = dbo.Demande.idDemandeur INNER JOIN
+                      dbo.Equipement ON dbo.Demande.idEquipement = dbo.Equipement.idEquipement INNER JOIN
+                      dbo.Priorite ON dbo.Demande.idPriorite = dbo.Priorite.idPriorite INNER JOIN
+                      dbo.TypeDemande ON dbo.Demande.idTypeDemande = dbo.TypeDemande.idTypeDemande ON 
+                      dbo.UAP.idUAP = dbo.Demande.idUAP LEFT OUTER JOIN
+                      dbo.Procede ON dbo.Demande.idPiece = dbo.Procede.idProcede LEFT OUTER JOIN
+                      dbo.Activite RIGHT OUTER JOIN
+                      dbo.Intervention INNER JOIN
+                      dbo.EtatIntervention ON dbo.Intervention.idDetail = dbo.EtatIntervention.idEtat ON 
+                      dbo.Activite.idIntervention = dbo.Intervention.idIntervention LEFT OUTER JOIN
+                      dbo.Service ON dbo.Intervention.idService = dbo.Service.idService ON dbo.Demande.idDemande = dbo.Intervention.idDemande LEFT OUTER JOIN
+                      dbo.SousEnsemble ON dbo.Demande.idSousEnsemble = dbo.SousEnsemble.idSousEnsemble RIGHT OUTER JOIN
+                      dbo.DegreUrgence ON dbo.Demande.idUrgence = dbo.DegreUrgence.idUrgence LEFT OUTER JOIN
+                      dbo.TypeIntervention RIGHT OUTER JOIN
+                      dbo.Realisation ON dbo.TypeIntervention.idTypeIntervention = dbo.Realisation.idTypeIntervention ON 
+                      dbo.Intervention.idIntervention = dbo.Realisation.idIntervention LEFT OUTER JOIN
+                      dbo.Intervenant AS Intervenant_PEC RIGHT OUTER JOIN
+                      dbo.PriseEnCompte ON Intervenant_PEC.idIntervenant = dbo.PriseEnCompte.idIntervenant ON 
+                      dbo.Intervention.idIntervention = dbo.PriseEnCompte.idIntervention
+WHERE     (dbo.Intervention.idIntervention IS NOT NULL)
+
+GO
+
+

@@ -1,0 +1,473 @@
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+/****** Object:  StoredProcedure [dbo].[DemandePrev]    Script Date: 07/10/2013 11:29:50 ******/
+
+CREATE procedure [dbo].[DemandePrev](@numInter int) as
+
+declare @NumDem int
+declare @TypeMaint int
+declare @NumFP int
+declare @Frequence int
+declare @Basculement int
+declare @DatePrevisionnel datetime
+declare @DateBasculement datetime
+declare @saison int
+declare @Actif int
+
+select @NumDem =idDemande from dbo.Intervention
+		where idIntervention = @numInter;
+
+select @NumFP = idFichePreventive from dbo.Demande
+				where idDemande = @NumDem;	
+											
+if coalesce(@NumFP,0) = 0   
+begin
+	return;
+end
+
+select @Actif = Actif from dbo.FichePreventive
+				where idFichePreventive = @NumFP;	
+
+if @Actif = 0 
+begin
+	return;
+end
+			
+select @TypeMaint = idTypePlanification from dbo.FichePreventive
+		where idFichePreventive = @NumFP ;
+
+
+-- Maintenance préventive par relevé de compteur
+if @TypeMaint = 1 
+begin
+	return;
+end
+
+-- Maintenance préventive récurrente
+if @TypeMaint = 2 
+begin
+	select @Frequence =  Frequence from dbo.FichePreventive
+		where idFichePreventive = @NumFP;
+end
+
+-- Maintenance préventive par arrêt technique (semestriel)
+if @TypeMaint = 3 
+begin
+	select @Frequence =  datediff(day,getdate(),[Date]) 
+		from dbo.ArretTechnique
+		where EstProchain = -1;
+end
+
+-- Maintenance préventive par arrêt technique d'été
+if @TypeMaint = 4
+begin
+	select @Frequence =  datediff(day,getdate(),[Date]) 
+		from dbo.ArretTechnique
+		where ProchainEte = -1;
+end
+
+-- Maintenance préventive par arrêt technique d'hiver
+if @TypeMaint = 5
+begin
+	select @Frequence =  datediff(day,getdate(),[Date]) 
+		from dbo.ArretTechnique
+		where ProchainHiver = -1;
+end
+	
+set @DatePrevisionnel = getdate() + @Frequence
+
+select @Basculement = DelaiBasculement  from dbo.FichePreventive
+		where idFichePreventive = @NumFP;
+
+set @DateBasculement = @DatePrevisionnel - @Basculement
+
+set @DatePrevisionnel = CAST(FLOOR(CAST(@DatePrevisionnel AS FLOAT)) AS DATETIME)
+set @DateBasculement = CAST(FLOOR(CAST(@DateBasculement AS FLOAT)) AS DATETIME)
+
+print @Frequence
+print @DatePrevisionnel
+print @DateBasculement
+
+insert into demande
+([date],idDemandeur,idTypeDemande,idEquipement,idSousEnsemble,
+idPiece,idUrgence,idPriorite,[Description],idUAP,idSecteur,
+idFichePreventive,DatePrevision,DateBasculement,idService,EtatDemande)
+
+select getdate(),idDemandeur,idTypeDemande,idEquipement,idSousEnsemble,
+idPiece,idUrgence,idPriorite,[Description],idUAP,idSecteur,
+idFichePreventive,@DatePrevisionnel,@DateBasculement,idService,0
+ from demande
+where idDemande = @NumDem
+
+update intervention
+set PrevGenere = -1,
+DateCloture = getdate()
+where idIntervention = @numInter
+
+GO
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+/****** Object:  StoredProcedure [dbo].[NewFP]    Script Date: 07/10/2013 11:07:53 ******/
+
+CREATE procedure [dbo].[NewFP](@numFP int) as
+
+declare @TypeMaint int
+declare @Frequence int
+declare @Basculement int
+declare @DatePrevisionnel datetime
+declare @DateBasculement datetime
+declare @saison int
+				
+select @TypeMaint = idTypePlanification from dbo.FichePreventive
+		where idFichePreventive = @NumFP ;
+
+-- Maintenance préventive par relevé de compteur
+if @TypeMaint = 1 
+begin
+	return;
+end
+
+-- Maintenance préventive récurrente
+if @TypeMaint = 2 
+begin
+	select @Frequence =  Frequence from dbo.FichePreventive
+		where idFichePreventive = @NumFP;
+end
+
+-- Maintenance préventive par arrêt technique (semestriel)
+if @TypeMaint = 3 
+begin
+	select @Frequence =  datediff(day,getdate(),[Date]) 
+		from dbo.ArretTechnique
+		where EstProchain = -1;
+end
+
+-- Maintenance préventive par arrêt technique d'été
+if @TypeMaint = 4
+begin
+	select @Frequence =  datediff(day,getdate(),[Date]) 
+		from dbo.ArretTechnique
+		where ProchainEte = -1;
+end
+
+-- Maintenance préventive par arrêt technique d'hiver
+if @TypeMaint = 5
+begin
+	select @Frequence =  datediff(day,getdate(),[Date]) 
+		from dbo.ArretTechnique
+		where ProchainHiver = -1;
+end
+	
+set @DatePrevisionnel = getdate() + @Frequence
+
+select @Basculement = DelaiBasculement  from dbo.FichePreventive
+		where idFichePreventive = @NumFP;
+
+set @DateBasculement = @DatePrevisionnel + @Basculement
+
+set @DatePrevisionnel = CAST(FLOOR(CAST(@DatePrevisionnel AS FLOAT)) AS DATETIME)
+set @DateBasculement = CAST(FLOOR(CAST(@DateBasculement AS FLOAT)) AS DATETIME)
+
+insert into demande
+([date],idDemandeur,idTypeDemande,idEquipement,idSousEnsemble,
+idPiece,idUrgence,idPriorite,[Description],idUAP,idSecteur,
+idFichePreventive,DatePrevision,DateBasculement,idService,EtatDemande)
+select getdate(),1,2,idEquipement,idSousEnsemble,
+idPiece,5,4,[Description],idUAP,idSecteur,
+idFichePreventive,@DatePrevisionnel,@DateBasculement,idService,0
+ from dbo.FichePreventive
+where idFichePreventive = @numFP
+
+update dbo.FichePreventive
+set DateDebut = getDate()
+where idFichePreventive = @numFP
+
+
+GO
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+create Procedure DeleteFP(@NumFP int)
+AS
+
+DELETE FROM Demande
+Where idFichePreventive = @NumFP
+AND EtatDemande = 0;
+
+UPDATE dbo.FichePreventive 
+set DateArret = GETDATE()
+where idFichePreventive = @NumFP;
+
+GO
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+create Procedure AjusteDateInter(@NumInter int ,@DateCreation datetime)
+AS
+BEGIN	
+	SET NOCOUNT ON;
+
+	Declare @DateJour datetime
+	Declare @Ecart int
+	
+		set @DateCreation = CAST(FLOOR(CAST(@DateCreation AS FLOAT)) AS DATETIME)
+		set @DateJour = CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME)
+		set @Ecart = DATEDIFF(day,@DateCreation,@DateJour)
+
+				if @Ecart < 0
+					BEGIN
+						UPDATE Intervention
+						set DateCreation = GETDATE()
+						WHERE idIntervention = @NumInter
+					END
+END
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+CREATE procedure [dbo].[Planifier]
+as 
+
+BEGIN
+declare c_art cursor forward_only
+for
+select idDemande 
+	   from Demande
+       
+where EtatDemande = 0
+AND
+   (CAST(FLOOR(CAST(DateBasculement AS FLOAT)) AS DATETIME)
+<= CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME));
+
+declare @numDem int;
+
+Open c_art;
+Fetch c_art into @numDem
+While (@@FETCH_STATUS=0) 
+	BEGIN
+		Print @numDem
+		update Demande
+			set EtatDemande = -1
+			where idDemande = @numDem
+			
+		Fetch c_art into @numDem
+	END
+close c_art;
+deallocate c_art;
+
+END
+
+-----------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+
+create procedure [dbo].[MAJ_AT_Calendrier](@DateJour datetime)
+as
+
+declare @NextAT datetime
+declare @AT datetime
+declare @moisAT int
+declare @IndiceSaison int
+
+select @AT =  DATE from  dbo.ArretTechnique
+WHERE EstProchain = -1
+
+if datediff(day,@DateJour,@AT) < 0 
+	BEGIN
+		select @NextAT = Min(AT.Date) 
+		from dbo.ArretTechnique as AT
+		Where AT.Date >= @DateJour;
+
+		update dbo.ArretTechnique
+		set EstProchain = 0,
+			ProchainEte = 0,
+			ProchainHiver = 0
+		
+		update dbo.ArretTechnique
+		set EstProchain = -1
+		Where Date = @NextAT
+		
+		set @moisAT = DATEPART(MONTH,@NextAT)
+		
+		select @IndiceSaison = NumAT from dbo.ArretTechnique
+				WHERE Date = @NextAT
+		
+		if @moisAT = 8 
+			BEGIN
+				
+				update dbo.ArretTechnique
+				set ProchainEte = -1 
+				WHERE NumAT = @IndiceSaison
+				
+				set @IndiceSaison = @IndiceSaison + 1
+				
+				update dbo.ArretTechnique
+				set ProchainHiver = -1 
+				WHERE NumAT = @IndiceSaison
+			END
+		
+		ELSE
+			BEGIN
+				update dbo.ArretTechnique
+				set ProchainHiver = -1 
+				WHERE NumAT = @IndiceSaison	
+				
+				set @IndiceSaison = @IndiceSaison + 1
+				
+				update dbo.ArretTechnique
+				set ProchainEte = -1 
+				WHERE NumAT = @IndiceSaison
+			END	
+	END
+	
+GO
+
+-----------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+
+Create Procedure CalculReleveCompteur(@idCompteur int,@Releve decimal(18,2))
+AS
+
+declare @ValeurMax bigint
+declare @ConsoPreventif decimal(18,2)
+declare @DerValReleve decimal(18,2)
+declare @Consommation decimal(18,2)
+declare @idDernierReleve bigint
+declare @frequence decimal(18,2)
+declare @tamponPreventif decimal(18,2)
+
+	----------- Initialisation des paramètres du compteur et du relevé
+select @ValeurMax = ValeurMax from dbo.Compteur 
+		WHERE idCompteur = @idCompteur
+
+select @frequence = ValeurSeuil FROM dbo.FichePreventive
+		WHERE idCompteur = @idCompteur
+		
+select @idDernierReleve = MAX(idReleveCompteur) from ReleveCompteur
+							WHERE idCompteur = @idCompteur
+
+	----------- Premier relevé avec le compteur			
+				if coalesce(@idDernierReleve,0) = 0
+				BEGIN
+						set @ConsoPreventif = 0
+						set @DerValReleve = 0		
+						set @Consommation = @Releve
+				END
+				
+    ----------- Relevé avec un compteur	ayant déjà des enregistrements		
+				if coalesce(@idDernierReleve,0) > 0				
+				BEGIN
+					 select @ConsoPreventif = ConsoDerPreventif
+						FROM dbo.ReleveCompteur 
+						WHERE idReleveCompteur = @idDernierReleve
+						
+					 select @DerValReleve = ValeurReleve
+						FROM dbo.ReleveCompteur 
+						WHERE idReleveCompteur = @idDernierReleve	
+				END
+				
+	----------- Le relevé s'est remis automatiquement à 0			
+				if (@Releve - @DerValReleve) <0
+				 BEGIN
+					set @Consommation = @ValeurMax - @DerValReleve + @Releve
+				 END
+					 
+	----------- Le relevé ne s'est pas remis automatiquement à 0					
+				if (@Releve - @DerValReleve) >=0
+				 BEGIN
+					set @Consommation = @Releve - @DerValReleve
+				 END
+
+	----------- On détermine la consommation depuis le dernier préventif	
+				set @tamponPreventif = @ConsoPreventif + @Consommation
+
+	----------- On vérifie si la fréquence du compteur a été dépassée			 
+				if (@tamponPreventif >= @frequence)
+					BEGIN
+						set @ConsoPreventif = (@tamponPreventif)%@frequence 
+						--- Lancement procédure nouvelle intervention préventive compteur
+						EXEC DemandePrevCompteur @idCompteur
+						
+					END
+				Else
+					BEGIN
+						set @ConsoPreventif = @tamponPreventif
+					END
+	
+	----------- On insère les données dans l'historique du relevé du compteur
+				INSERT INTO dbo.ReleveCompteur 		
+				(idCompteur,DateReleve,ConsoDerPreventif,DerniereValeur,Consommation,ValeurReleve)
+				VALUES
+				(@idCompteur,getdate(),@ConsoPreventif,@DerValReleve,@Consommation,@Releve)
+					
+GO			
+
+
+-----------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+
+CREATE Procedure DemandePrevCompteur(@idCompteur int) 
+AS
+
+declare @NumDem int
+declare @TypeMaint int
+declare @NumFP int
+
+
+declare @DatePrevisionnel datetime
+declare @DateBasculement datetime
+declare @saison int
+declare @Actif int
+
+select @NumFP = max(idFichePreventive) from dbo.FichePreventive
+				where idCompteur = @idCompteur
+				And Actif = -1;	
+											
+if coalesce(@NumFP,0) = 0   
+begin
+	return;
+end
+
+select @Actif = Actif from dbo.FichePreventive
+				where idFichePreventive = @NumFP;	
+
+if @Actif = 0 
+begin
+	return;
+end
+			
+set @DatePrevisionnel = getdate() 
+set @DateBasculement = getdate()
+
+set @DatePrevisionnel = CAST(FLOOR(CAST(@DatePrevisionnel AS FLOAT)) AS DATETIME)
+set @DateBasculement = CAST(FLOOR(CAST(@DateBasculement AS FLOAT)) AS DATETIME)
+
+insert into demande
+([date],idDemandeur,idTypeDemande,idEquipement,idSousEnsemble,
+idPiece,idUrgence,idPriorite,[Description],idUAP,idSecteur,
+idFichePreventive,DatePrevision,DateBasculement,idService,EtatDemande)
+
+select getdate(),1,1,idEquipement,idSousEnsemble,
+idPiece,5,4,[Description],idUAP,idSecteur,
+idFichePreventive,@DatePrevisionnel,@DateBasculement,idService,-1
+	from dbo.FichePreventive
+where idFichePreventive = @numFP
+
+GO
+
+-----------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+

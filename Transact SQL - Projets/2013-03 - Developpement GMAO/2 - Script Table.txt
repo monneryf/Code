@@ -1,0 +1,1583 @@
+/****** Object:  Table [dbo].[ActionMaster] ******/
+
+CREATE TABLE [dbo].[ActionMaster](
+	[idActionMaster] [int] IDENTITY(1,1) NOT NULL,
+	[idFichePreventive] [int] NOT NULL,
+	[Numero] [int] NULL,
+	[Libelle] [varchar](250) NULL,
+	[Observation] [nvarchar](250) NULL,
+	[idCompteur] [int] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[EstRealise] [smallint] NULL,
+ CONSTRAINT [PK_ActionMaster] PRIMARY KEY CLUSTERED 
+([idActionMaster] ASC))
+
+GO
+
+/****** Object:  Table [dbo].[Action]    Script Date: 03/29/2013 15:37:52 ******/
+
+CREATE TABLE [dbo].[Action](
+	[idIntervention] [int] NOT NULL,
+	[Numero] [int] NULL,
+	[idAction] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](250) NULL,
+	[idCompteur] [int] NULL,
+	[ValeurCompteur] [numeric](18, 2) NULL,
+	[EstRealise] [smallint] NOT NULL,
+	[Observation] [nvarchar](250) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Intervenants] [varchar](50) NULL,
+	[RefAction] [bigint] NULL,
+	[idFichePreventive] [int] NULL,
+ CONSTRAINT [PK_Action] PRIMARY KEY CLUSTERED 
+(
+	[idAction] ASC
+))
+GO
+
+
+
+
+/****** Object:  Table [dbo].[ActionIntervenant]    Script Date: 03/29/2013 15:38:09 ******/
+
+CREATE TABLE [dbo].[ActionIntervenant](
+	[RefAction] [bigint] NOT NULL,
+	[idIntervenant] [int] NOT NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[idActionIntervenant] [int] IDENTITY(1,1) NOT NULL,
+ CONSTRAINT [PK_ActionIntervenant] PRIMARY KEY CLUSTERED 
+(
+	[idActionIntervenant] ASC
+) ON [PRIMARY]
+
+GO
+
+/****** Object:  Table [dbo].[Activite]    Script Date: 05/13/2013 11:04:13 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Activite](
+	[idIntervention] [int] NOT NULL,
+	[EtatActivite] [smallint] NOT NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[idActivite] [int] IDENTITY(1,1) NOT NULL,
+ CONSTRAINT [PK_Activite] PRIMARY KEY CLUSTERED 
+(
+	[idActivite] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+/****** Object:  Table [dbo].[ActiviteIntervenant]    Script Date: 03/29/2013 15:38:56 ******/
+
+CREATE TABLE [dbo].[ActiviteIntervenant](
+	[idIntervention] [int] NOT NULL,
+	[idIntervenant] [int] NULL,
+	[TempsPasse] [numeric](10, 2) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[idActiviteIntervenant] [int] IDENTITY(1,1) NOT NULL,
+ CONSTRAINT [PK_ActiviteIntervenant] PRIMARY KEY CLUSTERED 
+(
+	[idActiviteIntervenant] ASC
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[ActiviteIntervenant] ADD  CONSTRAINT [DF_ActiviteIntervenant_TempsPasse]  DEFAULT (0) FOR [TempsPasse]
+GO
+
+/****** Object:  Table [dbo].[AffectationService]    Script Date: 07/18/2013 16:20:56 ******/
+
+CREATE TABLE [dbo].[AffectationService](
+	[idAffectation] [int] IDENTITY(1,1) NOT NULL,
+	[idUAP] [int] NULL,
+	[idService] [int] NULL,
+	[idServiceLD] [int] NULL,
+ CONSTRAINT [PK_AffectationService] PRIMARY KEY CLUSTERED 
+(
+	[idAffectation] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+
+/****** Object:  Table [dbo].[ArretTechnique]    Script Date: 06/24/2013 15:55:44 ******/
+
+CREATE TABLE [dbo].[ArretTechnique](
+	[NumAT] [int] IDENTITY(1,1) NOT NULL,
+	[NumSaison] [smallint] NOT NULL,
+	[Date] [datetime] NOT NULL,
+	[EstProchain] [smallint] NOT NULL,
+	[ProchainEte] [smallint] NULL,
+	[ProchainHiver] [smallint] NULL,
+ CONSTRAINT [PK_ArretTechnique] PRIMARY KEY CLUSTERED 
+(
+	[NumAT] ASC
+) ON [PRIMARY]
+
+GO
+
+/****** Object:  Table [dbo].[CategorieEquip]    Script Date: 03/29/2013 15:39:10 ******/
+
+CREATE TABLE [dbo].[CategorieEquip](
+	[idCatEquip] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_CategorieEquip] PRIMARY KEY CLUSTERED 
+(
+	[idCatEquip] ASC
+),
+ CONSTRAINT [UK_CategorieEquip_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+
+ALTER TABLE [dbo].[CategorieEquip] ADD  CONSTRAINT [DF_CategorieEquip_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+
+/****** Object:  Table [dbo].[Compteur]    Script Date: 03/29/2013 15:39:19 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Compteur](
+	[idCompteur] [int] IDENTITY(1,1) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[Ordre] [int] NULL,
+	[Unite] [varchar](25) NULL,
+	[ValeurMax] [int] NOT NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[idEquipement] [int] NULL,
+	[idSousEns] [int] NULL,
+	[ValeurSeuil] [numeric](18, 2) NULL,
+	[DernierRelev] [numeric](18, 2) NULL,
+	[RelevGener] [int] NULL,
+	[idFichePrev] [int] NULL,
+ CONSTRAINT [PK_Compteur] PRIMARY KEY CLUSTERED 
+(
+	[idCompteur] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+/****** Object:  Table [dbo].[ContactFourn]    Script Date: 03/29/2013 15:40:08 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[ContactFourn](
+	[idFournisseur] [int] NULL,
+	[Nom] [varchar](50) NOT NULL,
+	[Prenom] [varchar](50) NOT NULL,
+	[Email] [varchar](50) NULL,
+	[TelMobile] [varchar](50) NULL,
+	[TelFixe] [varchar](50) NULL,
+	[Fonction] [varchar](50) NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[idContactFourn] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle]  AS ([Prenom] + ' ' + [Nom]),
+CONSTRAINT [PK_ContactFourn] PRIMARY KEY CLUSTERED 
+(
+	[idContactFourn] ASC
+),
+ CONSTRAINT [UK_id-Nom-Prenom] UNIQUE NONCLUSTERED 
+(
+	[idFournisseur] ASC,
+	[Nom] ASC,
+	[Prenom] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+/****** Object:  Table [dbo].[CouleurPolice]    Script Date: 03/29/2013 15:40:19 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[CouleurPolice](
+	[idCouleur] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_CouleurPolice] PRIMARY KEY CLUSTERED 
+(
+	[idCouleur] ASC
+),
+ CONSTRAINT [UK_CouleurPolice_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[CouleurPolice] ADD  CONSTRAINT [DF_CouleurPolice_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+/****** Object:  Table [dbo].[DegreUrgence]    Script Date: 03/29/2013 15:40:31 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[DegreUrgence](
+	[idUrgence] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[idPriorite] [int] NOT NULL,
+ CONSTRAINT [PK_DegreUrgence] PRIMARY KEY CLUSTERED 
+(
+	[idUrgence] ASC
+),
+ CONSTRAINT [UK_DegreUrgence] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) 
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[DegreUrgence] ADD  CONSTRAINT [DF_DegreUrgence_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+/****** Object:  Table [dbo].[Demande]    Script Date: 03/29/2013 15:40:41 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Demande](
+	[idDemande] [int] IDENTITY(1,1) NOT NULL,
+	[idDemandeur] [int] NOT NULL,
+	[idTypeDemande] [int] NULL,
+	[Date] [datetime] NOT NULL,
+	[idUAP] [int] NOT NULL,
+	[idSecteur] [int] NOT NULL,
+	[idPiece] [int] NULL,
+	[idEquipement] [int] NOT NULL,
+	[idSousEnsemble] [int] NULL,
+	[idUrgence] [int] NOT NULL,
+	[idPriorite] [int] NOT NULL,
+	[Description] [nvarchar](1000) NOT NULL,
+	[EtatDemande] [smallint] NOT NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[idFichePreventive] [int] NULL,
+	[EstRonde] [smallint] NULL,
+	[DatePrevision] [datetime] NULL,
+	[DateBasculement] [datetime] NULL,
+	[idService] [int] NULL,
+	[DebutArret] [datetime] NULL,
+ CONSTRAINT [PK_Demande] PRIMARY KEY CLUSTERED 
+(
+	[idDemande] ASC
+)
+) ON [PRIMARY] 
+
+GO
+
+
+/****** Object:  Table [dbo].[DependanceEquipSSEnsem]    Script Date: 03/29/2013 15:41:07 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[DependanceEquipSSEnsem](
+	[idEquipementMaster] [int] NOT NULL,
+	[idEquipementChild] [int] NOT NULL,
+	[idSousEnsemMaster] [int] NULL,
+	[idSousEnsemChild] [int] NULL,
+	[Actif] [smallint] NOT NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[idDependanceEquipSSEnsem] [int] IDENTITY(1,1) NOT NULL,
+ CONSTRAINT [PK_DependanceEquipSSEnsem] PRIMARY KEY CLUSTERED 
+(
+	[idDependanceEquipSSEnsem] ASC
+),
+ CONSTRAINT [UK_DependanceEquipSSEnsem] UNIQUE NONCLUSTERED 
+(
+	[idEquipementMaster] ASC,
+	[idEquipementChild] ASC,
+	[idSousEnsemMaster] ASC,
+	[idSousEnsemChild] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[DependanceEquipSSEnsem]  WITH NOCHECK ADD  CONSTRAINT [CK_Dependance_idEquMast_idEquChild] CHECK  (([idEquipementMaster] <> [idEquipementChild]))
+GO
+
+ALTER TABLE [dbo].[DependanceEquipSSEnsem] CHECK CONSTRAINT [CK_Dependance_idEquMast_idEquChild]
+GO
+
+ALTER TABLE [dbo].[DependanceEquipSSEnsem] ADD  CONSTRAINT [DF_DependanceEquipSSEnsem_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+/****** Object:  Table [dbo].[Domaine]    Script Date: 03/29/2013 15:41:22 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Domaine](
+	[idDomaine] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NULL,
+	[Actif] [smallint] NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_Domaine] PRIMARY KEY CLUSTERED 
+(
+	[idDomaine] ASC
+),
+ CONSTRAINT [UK_Domaine_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[Domaine] ADD  CONSTRAINT [DF_Domaine_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+
+/****** Object:  Table [dbo].[Equipement]    Script Date: 03/29/2013 15:41:34 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Equipement](
+	[idEquipement] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[idSecteur] [int] NOT NULL,
+	[idModele] [int] NOT NULL,
+	[idCategorie] [int] NOT NULL,
+	[NumeroFournisseur] [varchar](50) NULL,
+	[NumeroSerie] [varchar](50) NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[idUAP] [int] NOT NULL,
+	[idFournisseur] [int] NOT NULL,
+	[idProcede] [int] NULL,
+ CONSTRAINT [PK_Equipement] PRIMARY KEY CLUSTERED 
+(
+	[idEquipement] ASC
+),
+ CONSTRAINT [UK_Equipement_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+/****** Object:  Table [dbo].[EtatIntervention]    Script Date: 03/29/2013 15:41:47 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[EtatIntervention](
+	[idEtat] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[idCouleur] [int] NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Type] [varchar](25) NOT NULL,
+ CONSTRAINT [PK_EtatIntervention] PRIMARY KEY CLUSTERED 
+(
+	[idEtat] ASC
+),
+ CONSTRAINT [UK_EtatIntervention_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[EtatIntervention] ADD  CONSTRAINT [DF_EtatIntervention_Type]  DEFAULT ('Utilisateur') FOR [Type]
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+/****** Object:  Table [dbo].[FichePreventive]    Script Date: 03/29/2013 15:42:00 ******/
+SET ANSI_NULLS ON
+GO
+
+CREATE TABLE [dbo].[FichePreventive](
+	[idFichePreventive] [int] IDENTITY(1,1) NOT NULL,
+	[EstRonde] [smallint] NULL,
+	[Actif] [smallint] NOT NULL,
+	[Description] [varchar](50) NOT NULL,
+	[idUAP] [int] NOT NULL,
+	[idSecteur] [int] NULL,
+	[idEquipement] [int] NOT NULL,
+	[idSousEnsemble] [int] NULL,
+	[idPiece] [int] NULL,
+	[idTypePlanification] [int] NOT NULL,
+	[Frequence] [smallint] NULL,
+	[Horizon] [smallint] NULL,
+	[DateDebut] [datetime] NULL,
+	[TpsInterPrevu] [decimal](18, 2) NULL,
+	[TpsArretPrevu] [decimal](18, 2) NULL,
+	[DatePlanification] [datetime] NULL,
+	[FichierJoint] [smallint] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[DelaiBasculement] [smallint] NULL,
+	[DateArret] [datetime] NULL,
+	[idCompteur] [int] NULL,
+	[ValeurSeuil] [int] NULL,
+	[idService] [int] NULL,
+ CONSTRAINT [PK_FichePreventive] PRIMARY KEY CLUSTERED 
+(
+	[idFichePreventive] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+/****** Object:  Table [dbo].[FiltreFichePrev]    Script Date: 03/29/2013 15:42:19 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[FiltreFichePrev](
+	[idFiltrePrev] [int] IDENTITY(1,1) NOT NULL,
+	[idUtilisateur] [int] NOT NULL,
+	[Titre] [varchar](50) NOT NULL,
+	[FiltreActif] [smallint] NULL,
+	[idFichePreventive] [int] NULL,
+	[idUAP] [int] NULL,
+	[idSecteur] [int] NULL,
+	[idEquipement] [int] NULL,
+	[idSousEnsemble] [int] NULL,
+	[Nbj] [smallint] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Ordre] [smallint] NULL,
+	[EstRonde] [smallint] NULL,
+	[Actif] [smallint] NULL,
+	[RequeteFiltre] [nvarchar](250) NULL,
+	[RequeteLibelle] [nvarchar](250) NULL,
+ CONSTRAINT [PK_FiltreFichePrev] PRIMARY KEY CLUSTERED 
+(
+	[idFiltrePrev] ASC
+),
+ CONSTRAINT [UK_FiltreFichePrev_Titre] UNIQUE NONCLUSTERED 
+(
+	[Titre] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+/****** Object:  Table [dbo].[FiltreIntervention]    Script Date: 03/29/2013 15:42:35 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[FiltreIntervention](
+	[idFiltreInter] [int] IDENTITY(1,1) NOT NULL,
+	[idUtilisateur] [int] NOT NULL,
+	[Titre] [varchar](50) NOT NULL,
+	[DateDebut] [datetime] NULL,
+	[DateFin] [datetime] NULL,
+	[idTypeDemande] [int] NULL,
+	[EstRonde] [smallint] NULL,
+	[idEtat] [int] NULL,
+	[idPriorite] [int] NULL,
+	[idService] [int] NULL,
+	[idIntervention] [int] NULL,
+	[idUAP] [int] NULL,
+	[idSecteur] [int] NULL,
+	[idEquipement] [int] NULL,
+	[FiltreActif] [smallint] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Ordre] [smallint] NULL,
+	[RequeteFiltre] [nvarchar](250) NULL,
+	[RequeteLibelle] [nvarchar](250) NULL,
+ CONSTRAINT [PK_FiltreIntervention] PRIMARY KEY CLUSTERED 
+(
+	[idFiltreInter] ASC
+),
+ CONSTRAINT [UK_FiltreIntervention_Titre] UNIQUE NONCLUSTERED 
+(
+	[Titre] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+/****** Object:  Table [dbo].[Fournisseur]    Script Date: 03/29/2013 15:42:47 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Fournisseur](
+	[idFournisseur] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[CodeERP] [varchar](50) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_Fournisseur] PRIMARY KEY CLUSTERED 
+(
+	[idFournisseur] ASC
+),
+ CONSTRAINT [UK_CodeERP] UNIQUE NONCLUSTERED 
+(
+	[CodeERP] ASC
+),
+ CONSTRAINT [UK_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[Fournisseur] ADD  CONSTRAINT [DF_Fournisseur_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+/****** Object:  Table [dbo].[GD_droit]    Script Date: 03/29/2013 15:42:59 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[GD_droit](
+	[idDroit] [int] IDENTITY(1,1) NOT NULL,
+	[code] [nvarchar](150) NOT NULL,
+	[libelle] [nvarchar](150) NOT NULL,
+	[description] [nvarchar](255) NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Menu] [varchar](50) NULL,
+	[AccessDonnees] [smallint] NULL,
+	[Formulaire] [varchar](50) NULL,
+	[Controle] [varchar](50) NULL,
+ CONSTRAINT [PK_GD_droit] PRIMARY KEY CLUSTERED 
+(
+	[idDroit] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+
+
+/****** Object:  Table [dbo].[GD_droit_groupe]    Script Date: 03/29/2013 15:43:23 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[GD_droit_groupe](
+	[idDroit] [int] NOT NULL,
+	[idGroupe] [int] NOT NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[idGD_droit_groupe] [int] IDENTITY(1,1) NOT NULL,
+ CONSTRAINT [PK_GD_droit_groupe] PRIMARY KEY CLUSTERED 
+(
+	[idDroit] ASC,
+	[idGroupe] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[GD_droit_groupe] ADD  CONSTRAINT [DF_GD_droit_groupe_idDroit]  DEFAULT (0) FOR [idDroit]
+GO
+
+ALTER TABLE [dbo].[GD_droit_groupe] ADD  CONSTRAINT [DF_GD_droit_groupe_idGroupe]  DEFAULT (0) FOR [idGroupe]
+GO
+
+
+/****** Object:  Table [dbo].[GD_droit_utilisateur]    Script Date: 03/29/2013 15:44:29 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[GD_droit_utilisateur](
+	[idDroit] [int] NOT NULL,
+	[idUtilisateur] [int] NOT NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[idGD_droit_utilisateur] [int] IDENTITY(1,1) NOT NULL,
+ CONSTRAINT [PK_GD_droit_utilisateur] PRIMARY KEY CLUSTERED 
+(
+	[idDroit] ASC,
+	[idUtilisateur] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[GD_droit_utilisateur] ADD  CONSTRAINT [DF_GD_droit_utilisateur_idDroit]  DEFAULT (0) FOR [idDroit]
+GO
+
+ALTER TABLE [dbo].[GD_droit_utilisateur] ADD  CONSTRAINT [DF_GD_droit_utilisateur_idUtilisateur]  DEFAULT (0) FOR [idUtilisateur]
+GO
+
+
+
+/****** Object:  Table [dbo].[GD_groupe]    Script Date: 03/29/2013 15:44:45 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[GD_groupe](
+	[idGroupe] [int] IDENTITY(1,1) NOT NULL,
+	[libelle] [nvarchar](100) NOT NULL,
+	[description] [nvarchar](255) NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+ CONSTRAINT [PK_GD_groupe] PRIMARY KEY CLUSTERED 
+(
+	[idGroupe] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+
+
+/****** Object:  Table [dbo].[GD_utilisateur]    Script Date: 03/29/2013 15:45:03 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[GD_utilisateur](
+	[idUtilisateur] [int] IDENTITY(1,1) NOT NULL,
+	[login] [nvarchar](50) NOT NULL,
+	[autoriseAD] [smallint] NOT NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[actif] [smallint] NULL,
+	[ordre] [smallint] NULL,
+ CONSTRAINT [PK_GD_utilisateur] PRIMARY KEY CLUSTERED 
+(
+	[idUtilisateur] ASC
+),
+ CONSTRAINT [UK_GD_Utilisateur_login] UNIQUE NONCLUSTERED 
+(
+	[login] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[GD_utilisateur] ADD  CONSTRAINT [DF_GD_utilisateur_autoriseAD]  DEFAULT (0) FOR [autoriseAD]
+GO
+
+
+
+/****** Object:  Table [dbo].[GD_utilisateur_groupe]    Script Date: 03/29/2013 15:45:19 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[GD_utilisateur_groupe](
+	[idUtilisateur] [int] NOT NULL,
+	[idGroupe] [int] NOT NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[idGD_utilisateur_groupe] [int] IDENTITY(1,1) NOT NULL,
+ CONSTRAINT [PK_GD_utilisateur_groupe] PRIMARY KEY CLUSTERED 
+(
+	[idUtilisateur] ASC,
+	[idGroupe] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[GD_utilisateur_groupe] ADD  CONSTRAINT [DF_GD_utilisateur_groupe_idUtilisateur]  DEFAULT (0) FOR [idUtilisateur]
+GO
+
+ALTER TABLE [dbo].[GD_utilisateur_groupe] ADD  CONSTRAINT [DF_GD_utilisateur_groupe_idGroupe]  DEFAULT (0) FOR [idGroupe]
+GO
+
+
+
+/****** Object:  Table [dbo].[Intervenant]    Script Date: 03/29/2013 15:45:33 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Intervenant](
+	[idIntervenant] [int] IDENTITY(1,1) NOT NULL,
+	[idService] [int] NOT NULL,
+	[Nom] [varchar](50) NOT NULL,
+	[Prenom] [varchar](50) NOT NULL,
+	[NomCourt] [varchar](10) NOT NULL,
+	[Tel1] [varchar](25) NULL,
+	[Tel2] [varchar](25) NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[email] [varchar](50) NULL,
+	[Libelle]  AS ([Prenom] + '  ' + [Nom]),
+ CONSTRAINT [PK_Intervenant] PRIMARY KEY CLUSTERED 
+(
+	[idIntervenant] ASC
+),
+ CONSTRAINT [UK_Intervenant_Nom_Prenom] UNIQUE NONCLUSTERED 
+(
+	[Nom] ASC,
+	[Prenom] ASC
+),
+ CONSTRAINT [UK_Intervenant_NomCourt] UNIQUE NONCLUSTERED 
+(
+	[NomCourt] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+/****** Object:  Table [dbo].[Intervention]    Script Date: 03/29/2013 15:45:51 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Intervention](
+	[idIntervention] [int] IDENTITY(1,1) NOT NULL,
+	[idDemande] [int] NOT NULL,
+	[idService] [int] NULL,
+	[idEtat] [int] NOT NULL,
+	[FichierJoint] [smallint] NOT NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[idDetail] [int] NULL,
+	[DateCloture] [datetime] NULL,
+	[PrevGenere] [smallint] NULL,
+	[DateCreation] [datetime] NULL,
+ CONSTRAINT [PK_Intervention] PRIMARY KEY CLUSTERED 
+(
+	[idIntervention] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+
+/****** Object:  Table [dbo].[ModeleEquip]    Script Date: 03/29/2013 15:46:03 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[ModeleEquip](
+	[idModeleEquipe] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[idFournisseur] [int] NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_ModeleEquip] PRIMARY KEY CLUSTERED 
+(
+	[idModeleEquipe] ASC
+),
+ CONSTRAINT [UK_ModeleEquip_Libelle_idFournisseur] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC,
+	[idFournisseur] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+/****** Object:  Table [dbo].[ParamGeneraux]    Script Date: 03/29/2013 15:49:52 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[ParamGeneraux](
+	[idParametre] [int] IDENTITY(1,1) NOT NULL,
+	[Parametre] [varchar](50) NOT NULL,
+	[Valeur] [varchar](250) NOT NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_ParamGeneraux] PRIMARY KEY CLUSTERED 
+(
+	[idParametre] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+
+/****** Object:  Table [dbo].[Piece]    Script Date: 03/29/2013 15:46:13 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Piece](
+	[idPiece] [int] IDENTITY(1,1) NOT NULL,
+	[idSousEnsemble] [int] NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[CodeArticleERP] [varchar](50) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[idEquipement] [int] NOT NULL,
+ CONSTRAINT [PK_Piece] PRIMARY KEY CLUSTERED 
+(
+	[idPiece] ASC
+),
+ CONSTRAINT [UK_Piece_idSousEnsemble_Libelle] UNIQUE NONCLUSTERED 
+(
+	[idSousEnsemble] ASC,
+	[Libelle] ASC,
+	[idEquipement] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+/****** Object:  Table [dbo].[PieceJointe]    Script Date: 03/29/2013 15:46:29 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+[idPJ] [int] IDENTITY(1,1) NOT NULL,
+	[idTypePJ] [int] NOT NULL,
+	[idIntervention] [int] NULL,
+	[idFichePrev] [int] NULL,
+	[Contenu] [nvarchar](150) NOT NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+ CONSTRAINT [PK_PieceJointe] PRIMARY KEY CLUSTERED 
+(
+	[idPJ] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+/****** Object:  Table [dbo].[Priorite]    Script Date: 03/29/2013 15:46:42 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Priorite](
+	[idPriorite] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_Priorite] PRIMARY KEY CLUSTERED 
+(
+	[idPriorite] ASC
+),
+ CONSTRAINT [UK_Priorite_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[Priorite] ADD  CONSTRAINT [DF_Priorite_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+
+/****** Object:  Table [dbo].[PriseEnCompte]    Script Date: 03/29/2013 15:46:55 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[PriseEnCompte](
+	[idPEC] [int] IDENTITY(1,1) NOT NULL,
+	[idIntervenant] [int] NULL,
+	[idIntervention] [int] NOT NULL,
+	[DatePrevue] [datetime] NULL,
+	[DureePrevue] [smallint] NULL,
+	[Observation] [nvarchar](500) NULL,
+	[EtatPEC] [smallint] NOT NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[idPlanificateur] [int] NULL,
+ CONSTRAINT [PK_PriseEnCompte] PRIMARY KEY CLUSTERED 
+(
+	[idPEC] ASC
+),
+ CONSTRAINT [UK_PriseEnCompte_idIntervenant_idIntervention] UNIQUE NONCLUSTERED 
+(
+	[idIntervenant] ASC,
+	[idIntervention] ASC
+)
+) ON [PRIMARY] 
+
+GO
+
+
+/****** Object:  Table [dbo].[Procede]    Script Date: 07/17/2013 14:33:00 ******/
+
+CREATE TABLE [dbo].[Procede](
+	[idProcede] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [nvarchar](150) NOT NULL,
+	[idSecteur] [int] NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+ CONSTRAINT [PK_Procede] PRIMARY KEY CLUSTERED 
+(
+	[idProcede] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[Procede] ADD  CONSTRAINT [DF_Procede_Actif]  DEFAULT ((0)) FOR [Actif]
+GO
+
+
+/****** Object:  Table [dbo].[Realisation]    Script Date: 03/29/2013 15:47:05 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Realisation](
+	[idRealisation] [int] IDENTITY(1,1) NOT NULL,
+	[idIntervention] [int] NOT NULL,
+	[DebutInter] [datetime] NULL,
+	[FinInter] [datetime] NULL,
+	[DebutArret] [datetime] NULL,
+	[FinArret] [datetime] NULL,
+	[FichierJoint] [smallint] NOT NULL,
+	[EtatRealisation] [smallint] NOT NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[idTypeIntervention] [int] NULL,
+	[idDomaine] [int] NULL,
+	[Domaine] [varchar](100) NULL,
+	[TpsArret]  AS (convert(decimal(18,2),(datediff(minute,[DebutArret],[FinArret]) / 60.00))),
+ CONSTRAINT [PK_Realisation] PRIMARY KEY CLUSTERED 
+(
+	[idRealisation] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[Realisation] ADD  CONSTRAINT [DF_Realisation_FichierJoint]  DEFAULT (0) FOR [FichierJoint]
+GO
+
+ALTER TABLE [dbo].[Realisation] ADD  CONSTRAINT [DF_Realisation_EtatRealisation]  DEFAULT (0) FOR [EtatRealisation]
+GO
+
+
+/****** Object:  Table [dbo].[ReleveCompteur]    Script Date: 07/23/2013 14:52:19 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ReleveCompteur](
+	[idReleveCompteur] [int] IDENTITY(1,1) NOT NULL,
+	[idCompteur] [int] NOT NULL,
+	[DateReleve] [datetime] NOT NULL,
+	[ConsoDerPreventif] [decimal](18, 2) NOT NULL,
+	[DerniereValeur] [decimal](18, 2) NOT NULL,
+	[Consommation] [decimal](18, 2) NOT NULL,
+	[ValeurReleve] [decimal](18, 2) NOT NULL,
+ CONSTRAINT [PK_ReleveCompteur] PRIMARY KEY CLUSTERED 
+(
+	[idReleveCompteur] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+/****** Object:  Table [dbo].[Secteur]    Script Date: 03/29/2013 15:47:14 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Secteur](
+	[idSecteur] [int] IDENTITY(1,1) NOT NULL,
+	[idUAP] [int] NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_Secteur] PRIMARY KEY CLUSTERED 
+(
+	[idSecteur] ASC
+),
+ CONSTRAINT [UK_Secteur_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+/****** Object:  Table [dbo].[Service]    Script Date: 03/29/2013 15:47:27 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Service](
+	[idService] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_Service] PRIMARY KEY CLUSTERED 
+(
+	[idService] ASC
+),
+ CONSTRAINT [UK_Service_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[Service] ADD  CONSTRAINT [DF_Service_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+/****** Object:  Table [dbo].[SousEnsemble]    Script Date: 03/29/2013 15:47:50 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[SousEnsemble](
+	[idSousEnsemble] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[idEquipement] [int] NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_SousEnsemble] PRIMARY KEY CLUSTERED 
+(
+	[idSousEnsemble] ASC
+),
+ CONSTRAINT [UK_SousEnsemble_idEquipement_Libelle] UNIQUE NONCLUSTERED 
+(
+	[idEquipement] ASC,
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+/****** Object:  Table [dbo].[TypeDemande]    Script Date: 03/29/2013 15:48:01 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[TypeDemande](
+	[idTypeDemande] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_TypeDemande] PRIMARY KEY CLUSTERED 
+(
+	[idTypeDemande] ASC
+),
+ CONSTRAINT [UK_TypeDemande_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[TypeDemande] ADD  CONSTRAINT [DF_TypeDemande_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+
+/****** Object:  Table [dbo].[TypeIntervention]    Script Date: 03/29/2013 15:48:15 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[TypeIntervention](
+	[idTypeIntervention] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_TypeIntervention] PRIMARY KEY CLUSTERED 
+(
+	[idTypeIntervention] ASC
+),
+ CONSTRAINT [UK_TypeIntervention_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[TypeIntervention] ADD  CONSTRAINT [DF_TypeIntervention_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+
+/****** Object:  Table [dbo].[TypePJ]    Script Date: 03/29/2013 15:48:28 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[TypePJ](
+	[idTypePJ] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NULL,
+	[Actif] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+	[Ordre] [smallint] NULL,
+ CONSTRAINT [PK_TypePJ] PRIMARY KEY CLUSTERED 
+(
+	[idTypePJ] ASC
+),
+ CONSTRAINT [UK_TypePJ_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[TypePJ] ADD  CONSTRAINT [DF_TypePJ_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+
+/****** Object:  Table [dbo].[TypePlanification]    Script Date: 03/29/2013 15:48:45 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[TypePlanification](
+	[idPlanification] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_TypePlanification] PRIMARY KEY CLUSTERED 
+(
+	[idPlanification] ASC
+),
+ CONSTRAINT [UK_TypePlanification_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[TypePlanification] ADD  CONSTRAINT [DF_TypePlanification_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+/****** Object:  Table [dbo].[UAP]    Script Date: 03/29/2013 15:48:56 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[UAP](
+	[idUAP] [int] IDENTITY(1,1) NOT NULL,
+	[Libelle] [varchar](50) NOT NULL,
+	[Actif] [smallint] NOT NULL,
+	[Ordre] [smallint] NULL,
+	[Sysdhc] [datetime] NULL,
+	[Sysutc] [nvarchar](50) NULL,
+	[Sysdhm] [datetime] NULL,
+	[Sysutm] [nvarchar](50) NULL,
+ CONSTRAINT [PK_UAP] PRIMARY KEY CLUSTERED 
+(
+	[idUAP] ASC
+),
+ CONSTRAINT [UK_UAP_Libelle] UNIQUE NONCLUSTERED 
+(
+	[Libelle] ASC
+)
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[UAP] ADD  CONSTRAINT [DF_UAP_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+/****** Object:  Table [dbo].[TableDomaine]    Script Date: 07/03/2013 16:57:12 ******/
+
+CREATE TABLE [dbo].[TableDomaine](
+	[idTableDomaine] [int] IDENTITY(1,1) NOT NULL,
+	[idIntervention] [int] NOT NULL,
+	[idDomaine] [int] NOT NULL,
+ CONSTRAINT [PK_TableDomaine] PRIMARY KEY CLUSTERED 
+(
+	[idTableDomaine] ASC
+)WITH ON [PRIMARY]
+
+GO
+
+
+

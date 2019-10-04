@@ -1,0 +1,577 @@
+
+ALTER TABLE [dbo].[Action] ADD  CONSTRAINT [DF_Action_EstRealise]  DEFAULT (-1) FOR [EstRealise]
+GO
+
+ALTER TABLE [dbo].[ActionMaster] ADD  CONSTRAINT [DF_ActionMaster_EstRealise]  DEFAULT (0) FOR [EstRealise]
+GO
+
+ALTER TABLE [dbo].[ActionIntervenant]  WITH NOCHECK ADD  CONSTRAINT [FK_ActionIntervenant_Intervenant_idIntervenant] FOREIGN KEY([idIntervenant])
+REFERENCES [dbo].[Intervenant] ([idIntervenant])
+GO
+
+ALTER TABLE [dbo].[ActionIntervenant] CHECK CONSTRAINT [FK_ActionIntervenant_Intervenant_idIntervenant]
+GO
+
+ALTER TABLE [dbo].[Activite]  WITH NOCHECK ADD  CONSTRAINT [FK_Activite_Intervention_idIntervention] FOREIGN KEY([idIntervention])
+REFERENCES [dbo].[Intervention] ([idIntervention])
+GO
+
+ALTER TABLE [dbo].[Activite] CHECK CONSTRAINT [FK_Activite_Intervention_idIntervention]
+GO
+
+ALTER TABLE [dbo].[Activite] ADD  CONSTRAINT [DF_Activite_EtatActivite]  DEFAULT (0) FOR [EtatActivite]
+GO
+
+ALTER TABLE [dbo].[Activite]
+ADD CONSTRAINT [UK_idIntervention] UNIQUE NONCLUSTERED 
+([idIntervention] ASC)
+GO
+
+ALTER TABLE [dbo].[ActiviteIntervenant]  WITH NOCHECK ADD  CONSTRAINT [FK_ActiviteIntervenant_Intervenant_idIntervenant] FOREIGN KEY([idIntervenant])
+REFERENCES [dbo].[Intervenant] ([idIntervenant])
+GO
+
+ALTER TABLE [dbo].[ActiviteIntervenant] CHECK CONSTRAINT [FK_ActiviteIntervenant_Intervenant_idIntervenant]
+GO
+
+ALTER TABLE [dbo].[ActiviteIntervenant]  WITH NOCHECK ADD  CONSTRAINT [FK_ActiviteIntervenant_Intervention_idIntervention] FOREIGN KEY([idIntervention])
+REFERENCES [dbo].[Intervention] ([idIntervention])
+GO
+
+ALTER TABLE [dbo].[ActiviteIntervenant] CHECK CONSTRAINT [FK_ActiviteIntervenant_Intervention_idIntervention]
+GO
+
+
+ALTER TABLE [dbo].[Compteur] ADD  CONSTRAINT [DF_Compteur_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+ALTER TABLE [dbo].[ContactFourn]  WITH NOCHECK ADD  CONSTRAINT [FK_ContactFourn_Fournisseur_idFournisseur] FOREIGN KEY([idFournisseur])
+REFERENCES [dbo].[Fournisseur] ([idFournisseur])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[ContactFourn] CHECK CONSTRAINT [FK_ContactFourn_Fournisseur_idFournisseur]
+GO
+
+ALTER TABLE [dbo].[ContactFourn] ADD  CONSTRAINT [DF_ContactFourn_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+ALTER TABLE [dbo].[Demande]  WITH NOCHECK ADD  CONSTRAINT [FK_Demande_DegreUrgence_idUrgence] FOREIGN KEY([idUrgence])
+REFERENCES [dbo].[DegreUrgence] ([idUrgence])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Demande] CHECK CONSTRAINT [FK_Demande_DegreUrgence_idUrgence]
+GO
+
+ALTER TABLE [dbo].[Demande]  WITH NOCHECK ADD  CONSTRAINT [FK_Demande_Equipement_idEquipement] FOREIGN KEY([idEquipement])
+REFERENCES [dbo].[Equipement] ([idEquipement])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Demande] CHECK CONSTRAINT [FK_Demande_Equipement_idEquipement]
+GO
+
+ALTER TABLE [dbo].[Demande]  WITH NOCHECK ADD  CONSTRAINT [FK_Demande_GD_utilisateur_idUtilisateur] FOREIGN KEY([idDemandeur])
+REFERENCES [dbo].[GD_utilisateur] ([idUtilisateur])
+GO
+
+ALTER TABLE [dbo].[Demande] CHECK CONSTRAINT [FK_Demande_GD_utilisateur_idUtilisateur]
+GO
+
+
+ALTER TABLE [dbo].[Demande]  WITH NOCHECK ADD  CONSTRAINT [FK_Demande_Priorite_idPriorite] FOREIGN KEY([idPriorite])
+REFERENCES [dbo].[Priorite] ([idPriorite])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Demande] CHECK CONSTRAINT [FK_Demande_Priorite_idPriorite]
+GO
+
+
+ALTER TABLE [dbo].[Demande]  WITH NOCHECK ADD  CONSTRAINT [FK_Demande_SousEnsemble_idSousEnsemble] FOREIGN KEY([idSousEnsemble])
+REFERENCES [dbo].[SousEnsemble] ([idSousEnsemble])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Demande] CHECK CONSTRAINT [FK_Demande_SousEnsemble_idSousEnsemble]
+GO
+
+ALTER TABLE [dbo].[Demande] ADD  CONSTRAINT [DF_Demande_EtatDemande]  DEFAULT (0) FOR [EtatDemande]
+GO
+
+ALTER TABLE [dbo].[Demande] ADD  CONSTRAINT [DF_Demande_EstRonde]  DEFAULT (0) FOR [EstRonde]
+GO
+
+ALTER TABLE [dbo].[Demande]  WITH NOCHECK ADD  CONSTRAINT [FK_Demande_TypeDemande] FOREIGN KEY([idTypeDemande])
+REFERENCES [dbo].[TypeDemande] ([idTypeDemande])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Demande] CHECK CONSTRAINT [FK_Demande_TypeDemande]
+GO
+
+ALTER TABLE [dbo].[Equipement]  WITH NOCHECK ADD  CONSTRAINT [FK_Equipement_CategorieEquip_idCategorie] FOREIGN KEY([idCategorie])
+REFERENCES [dbo].[CategorieEquip] ([idCatEquip])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Equipement] CHECK CONSTRAINT [FK_Equipement_CategorieEquip_idCategorie]
+GO
+
+ALTER TABLE [dbo].[Equipement]  WITH NOCHECK ADD  CONSTRAINT [FK_Equipement_Equipement] FOREIGN KEY([idEquipement])
+REFERENCES [dbo].[Equipement] ([idEquipement])
+GO
+
+ALTER TABLE [dbo].[Equipement] CHECK CONSTRAINT [FK_Equipement_Equipement]
+GO
+
+ALTER TABLE [dbo].[Equipement]  WITH NOCHECK ADD  CONSTRAINT [FK_Equipement_ModeleEquip_idModele] FOREIGN KEY([idModele])
+REFERENCES [dbo].[ModeleEquip] ([idModeleEquipe])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Equipement] CHECK CONSTRAINT [FK_Equipement_ModeleEquip_idModele]
+GO
+
+ALTER TABLE [dbo].[Equipement]  WITH NOCHECK ADD  CONSTRAINT [FK_Equipement_Secteur_idSecteur] FOREIGN KEY([idSecteur])
+REFERENCES [dbo].[Secteur] ([idSecteur])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Equipement] CHECK CONSTRAINT [FK_Equipement_Secteur_idSecteur]
+GO
+
+ALTER TABLE [dbo].[Equipement] ADD  CONSTRAINT [DF_Equipement_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+ALTER TABLE [dbo].[EtatIntervention]  WITH NOCHECK ADD  CONSTRAINT [FK_EtatIntervention_CouleurPolice_idPolice] FOREIGN KEY([idCouleur])
+REFERENCES [dbo].[CouleurPolice] ([idCouleur])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[EtatIntervention] CHECK CONSTRAINT [FK_EtatIntervention_CouleurPolice_idPolice]
+GO
+
+ALTER TABLE [dbo].[EtatIntervention] ADD  CONSTRAINT [DF_EtatIntervention_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+ALTER TABLE [dbo].[FichePreventive]  WITH NOCHECK ADD  CONSTRAINT [FK_FichePreventive_Equipement_idEquipement] FOREIGN KEY([idEquipement])
+REFERENCES [dbo].[Equipement] ([idEquipement])
+GO
+
+ALTER TABLE [dbo].[FichePreventive] CHECK CONSTRAINT [FK_FichePreventive_Equipement_idEquipement]
+GO
+
+ALTER TABLE [dbo].[FichePreventive]  WITH NOCHECK ADD  CONSTRAINT [FK_FichePreventive_SousEnsemble_idSousEnsemble] FOREIGN KEY([idSousEnsemble])
+REFERENCES [dbo].[SousEnsemble] ([idSousEnsemble])
+GO
+
+ALTER TABLE [dbo].[FichePreventive] CHECK CONSTRAINT [FK_FichePreventive_SousEnsemble_idSousEnsemble]
+GO
+
+ALTER TABLE [dbo].[FichePreventive]  WITH NOCHECK ADD  CONSTRAINT [FK_FichePreventive_TypePlanification_idPlanification] FOREIGN KEY([idTypePlanification])
+REFERENCES [dbo].[TypePlanification] ([idPlanification])
+GO
+
+ALTER TABLE [dbo].[FichePreventive] CHECK CONSTRAINT [FK_FichePreventive_TypePlanification_idPlanification]
+GO
+
+ALTER TABLE [dbo].[FichePreventive]  WITH NOCHECK ADD  CONSTRAINT [FK_FichePreventive_UAP_idUnite] FOREIGN KEY([idUAP])
+REFERENCES [dbo].[UAP] ([idUAP])
+GO
+
+ALTER TABLE [dbo].[FichePreventive] CHECK CONSTRAINT [FK_FichePreventive_UAP_idUnite]
+GO
+
+ALTER TABLE [dbo].[FichePreventive] ADD  CONSTRAINT [DF_FichePreventive_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+ALTER TABLE [dbo].[FichePreventive] ADD  CONSTRAINT [DF_FichePreventive_FichierJoint]  DEFAULT (0) FOR [FichierJoint]
+GO
+
+ALTER TABLE [dbo].[FiltreFichePrev]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreFichePrev_Equipement] FOREIGN KEY([idEquipement])
+REFERENCES [dbo].[Equipement] ([idEquipement])
+GO
+
+ALTER TABLE [dbo].[FiltreFichePrev] CHECK CONSTRAINT [FK_FiltreFichePrev_Equipement]
+GO
+
+ALTER TABLE [dbo].[FiltreFichePrev]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreFichePrev_GD_utilisateur] FOREIGN KEY([idUtilisateur])
+REFERENCES [dbo].[GD_utilisateur] ([idUtilisateur])
+GO
+
+ALTER TABLE [dbo].[FiltreFichePrev] CHECK CONSTRAINT [FK_FiltreFichePrev_GD_utilisateur]
+GO
+
+ALTER TABLE [dbo].[FiltreFichePrev]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreFichePrev_Secteur] FOREIGN KEY([idSecteur])
+REFERENCES [dbo].[Secteur] ([idSecteur])
+GO
+
+ALTER TABLE [dbo].[FiltreFichePrev] CHECK CONSTRAINT [FK_FiltreFichePrev_Secteur]
+GO
+
+ALTER TABLE [dbo].[FiltreFichePrev]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreFichePrev_SousEnsemble] FOREIGN KEY([idSousEnsemble])
+REFERENCES [dbo].[SousEnsemble] ([idSousEnsemble])
+GO
+
+ALTER TABLE [dbo].[FiltreFichePrev] CHECK CONSTRAINT [FK_FiltreFichePrev_SousEnsemble]
+GO
+
+ALTER TABLE [dbo].[FiltreFichePrev]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreFichePrev_UAP] FOREIGN KEY([idUAP])
+REFERENCES [dbo].[UAP] ([idUAP])
+GO
+
+ALTER TABLE [dbo].[FiltreFichePrev] CHECK CONSTRAINT [FK_FiltreFichePrev_UAP]
+GO
+
+
+ALTER TABLE [dbo].[FiltreIntervention]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreIntervention_Equipement] FOREIGN KEY([idEquipement])
+REFERENCES [dbo].[Equipement] ([idEquipement])
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention] CHECK CONSTRAINT [FK_FiltreIntervention_Equipement]
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreIntervention_EtatIntervention] FOREIGN KEY([idEtat])
+REFERENCES [dbo].[EtatIntervention] ([idEtat])
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention] CHECK CONSTRAINT [FK_FiltreIntervention_EtatIntervention]
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreIntervention_GD_utilisateur] FOREIGN KEY([idUtilisateur])
+REFERENCES [dbo].[GD_utilisateur] ([idUtilisateur])
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention] CHECK CONSTRAINT [FK_FiltreIntervention_GD_utilisateur]
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreIntervention_Intervention] FOREIGN KEY([idIntervention])
+REFERENCES [dbo].[Intervention] ([idIntervention])
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention] CHECK CONSTRAINT [FK_FiltreIntervention_Intervention]
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreIntervention_Priorite] FOREIGN KEY([idPriorite])
+REFERENCES [dbo].[Priorite] ([idPriorite])
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention] CHECK CONSTRAINT [FK_FiltreIntervention_Priorite]
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreIntervention_Secteur] FOREIGN KEY([idSecteur])
+REFERENCES [dbo].[Secteur] ([idSecteur])
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention] CHECK CONSTRAINT [FK_FiltreIntervention_Secteur]
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreIntervention_Service] FOREIGN KEY([idService])
+REFERENCES [dbo].[Service] ([idService])
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention] CHECK CONSTRAINT [FK_FiltreIntervention_Service]
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreIntervention_TypeDemande] FOREIGN KEY([idTypeDemande])
+REFERENCES [dbo].[TypeDemande] ([idTypeDemande])
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention] CHECK CONSTRAINT [FK_FiltreIntervention_TypeDemande]
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention]  WITH NOCHECK ADD  CONSTRAINT [FK_FiltreIntervention_UAP] FOREIGN KEY([idUAP])
+REFERENCES [dbo].[UAP] ([idUAP])
+GO
+
+ALTER TABLE [dbo].[FiltreIntervention] CHECK CONSTRAINT [FK_FiltreIntervention_UAP]
+GO
+
+ALTER TABLE [dbo].[Intervenant]  WITH NOCHECK ADD  CONSTRAINT [FK_Intervenant_Service_idService] FOREIGN KEY([idService])
+REFERENCES [dbo].[Service] ([idService])
+GO
+
+ALTER TABLE [dbo].[Intervenant] CHECK CONSTRAINT [FK_Intervenant_Service_idService]
+GO
+
+ALTER TABLE [dbo].[Intervenant] ADD  CONSTRAINT [DF_Intervenant_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+ALTER TABLE [dbo].[Intervention]  WITH NOCHECK ADD  CONSTRAINT [FK_Intervention_Demande_idDemande] FOREIGN KEY([idDemande])
+REFERENCES [dbo].[Demande] ([idDemande])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Intervention] CHECK CONSTRAINT [FK_Intervention_Demande_idDemande]
+GO
+
+ALTER TABLE [dbo].[Intervention]  WITH NOCHECK ADD  CONSTRAINT [FK_Intervention_EtatIntervention_idEtat] FOREIGN KEY([idEtat])
+REFERENCES [dbo].[EtatIntervention] ([idEtat])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Intervention] CHECK CONSTRAINT [FK_Intervention_EtatIntervention_idEtat]
+GO
+
+
+ALTER TABLE [dbo].[Intervention] ADD  CONSTRAINT [DF_Intervention_FichierJoint]  DEFAULT (0) FOR [FichierJoint]
+GO
+
+
+ALTER TABLE [dbo].[ModeleEquip]  WITH NOCHECK ADD  CONSTRAINT [FK_ModeleEquip_Fournisseur_idFournisseur] FOREIGN KEY([idFournisseur])
+REFERENCES [dbo].[Fournisseur] ([idFournisseur])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[ModeleEquip] CHECK CONSTRAINT [FK_ModeleEquip_Fournisseur_idFournisseur]
+GO
+
+ALTER TABLE [dbo].[ModeleEquip] ADD  CONSTRAINT [DF_ModeleEquip_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+ALTER TABLE [dbo].[Piece]  WITH NOCHECK ADD  CONSTRAINT [FK_Piece_SousEnsemble_idSousEnsemble] FOREIGN KEY([idSousEnsemble])
+REFERENCES [dbo].[SousEnsemble] ([idSousEnsemble])
+GO
+
+ALTER TABLE [dbo].[Piece] CHECK CONSTRAINT [FK_Piece_SousEnsemble_idSousEnsemble]
+GO
+
+ALTER TABLE [dbo].[Piece] ADD  CONSTRAINT [DF_Piece_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+ALTER TABLE [dbo].[PieceJointe]  WITH NOCHECK ADD  CONSTRAINT [FK_PieceJointe_FichePreventive_idFichePrev] FOREIGN KEY([idFichePrev])
+REFERENCES [dbo].[FichePreventive] ([idFichePreventive])
+GO
+
+ALTER TABLE [dbo].[PieceJointe] CHECK CONSTRAINT [FK_PieceJointe_FichePreventive_idFichePrev]
+GO
+
+ALTER TABLE [dbo].[PieceJointe]  WITH NOCHECK ADD  CONSTRAINT [FK_PieceJointe_Intervention_idIntervention] FOREIGN KEY([idIntervention])
+REFERENCES [dbo].[Intervention] ([idIntervention])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[PieceJointe] CHECK CONSTRAINT [FK_PieceJointe_Intervention_idIntervention]
+GO
+
+ALTER TABLE [dbo].[PieceJointe]  WITH NOCHECK ADD  CONSTRAINT [FK_PieceJointe_TypePJ_TypePJ] FOREIGN KEY([idTypePJ])
+REFERENCES [dbo].[TypePJ] ([idTypePJ])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[PieceJointe] CHECK CONSTRAINT [FK_PieceJointe_TypePJ_TypePJ]
+GO
+
+
+ALTER TABLE [dbo].[PriseEnCompte]  WITH NOCHECK ADD  CONSTRAINT [FK_PriseEnCompte_Intervenant_idIntervenant] FOREIGN KEY([idIntervenant])
+REFERENCES [dbo].[Intervenant] ([idIntervenant])
+GO
+
+ALTER TABLE [dbo].[PriseEnCompte] CHECK CONSTRAINT [FK_PriseEnCompte_Intervenant_idIntervenant]
+GO
+
+ALTER TABLE [dbo].[PriseEnCompte]  WITH NOCHECK ADD  CONSTRAINT [FK_PriseEnCompte_Intervention_idIntervention] FOREIGN KEY([idIntervention])
+REFERENCES [dbo].[Intervention] ([idIntervention])
+GO
+
+ALTER TABLE [dbo].[PriseEnCompte] CHECK CONSTRAINT [FK_PriseEnCompte_Intervention_idIntervention]
+GO
+
+ALTER TABLE [dbo].[PriseEnCompte] ADD  CONSTRAINT [DF_PriseEnCompte_EtatPEC]  DEFAULT (0) FOR [EtatPEC]
+GO
+
+ALTER TABLE [dbo].[PriseEnCompte]  WITH CHECK ADD  CONSTRAINT [FK_PriseEnCompte_GD_utilisateur] FOREIGN KEY([idPlanificateur])
+REFERENCES [dbo].[GD_utilisateur] ([idUtilisateur])
+GO
+
+ALTER TABLE [dbo].[PriseEnCompte] CHECK CONSTRAINT [FK_PriseEnCompte_GD_utilisateur]
+GO
+
+ALTER TABLE [dbo].[Secteur]  WITH NOCHECK ADD  CONSTRAINT [FK_Secteur_UAP_idUAP] FOREIGN KEY([idUAP])
+REFERENCES [dbo].[UAP] ([idUAP])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Secteur] CHECK CONSTRAINT [FK_Secteur_UAP_idUAP]
+GO
+
+ALTER TABLE [dbo].[Secteur] ADD  CONSTRAINT [DF_Secteur_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+ALTER TABLE [dbo].[SousEnsemble]  WITH NOCHECK ADD  CONSTRAINT [FK_SousEnsemble_Equipement_idEquipement] FOREIGN KEY([idEquipement])
+REFERENCES [dbo].[Equipement] ([idEquipement])
+GO
+
+ALTER TABLE [dbo].[SousEnsemble] CHECK CONSTRAINT [FK_SousEnsemble_Equipement_idEquipement]
+GO
+
+ALTER TABLE [dbo].[SousEnsemble] ADD  CONSTRAINT [DF_SousEnsemble_Actif]  DEFAULT (0) FOR [Actif]
+GO
+
+
+ALTER TABLE [dbo].[DegreUrgence]  WITH CHECK ADD  CONSTRAINT [FK_DegreUrgence_Priorite_idPriorite] FOREIGN KEY([idPriorite])
+REFERENCES [dbo].[Priorite] ([idPriorite])
+GO
+
+ALTER TABLE [dbo].[DegreUrgence] CHECK CONSTRAINT [FK_DegreUrgence_Priorite_idPriorite]
+GO
+
+ALTER TABLE [dbo].[Piece]  WITH CHECK ADD  CONSTRAINT [FK_Piece_Equipement_idEquipement] FOREIGN KEY([idEquipement])
+REFERENCES [dbo].[Equipement] ([idEquipement])
+GO
+
+ALTER TABLE [dbo].[Piece] CHECK CONSTRAINT [FK_Piece_Equipement_idEquipement]
+GO
+
+ALTER TABLE [dbo].[Equipement]  WITH CHECK ADD  CONSTRAINT [FK_Equipement_UAP_idUAP] FOREIGN KEY([idUAP])
+REFERENCES [dbo].[UAP] ([idUAP])
+GO
+
+ALTER TABLE [dbo].[Equipement] CHECK CONSTRAINT [FK_Equipement_UAP_idUAP]
+GO
+
+
+ALTER TABLE [dbo].[DependanceEquipSSEnsem]  WITH CHECK ADD  CONSTRAINT [FK_DependanceEquipSSEnsem_Equipement_Child] FOREIGN KEY([idEquipementChild])
+REFERENCES [dbo].[Equipement] ([idEquipement])
+GO
+
+ALTER TABLE [dbo].[DependanceEquipSSEnsem] CHECK CONSTRAINT [FK_DependanceEquipSSEnsem_Equipement_Child]
+GO
+
+ALTER TABLE [dbo].[DependanceEquipSSEnsem]  WITH CHECK ADD  CONSTRAINT [FK_DependanceEquipSSEnsem_Equipement_Master] FOREIGN KEY([idEquipementMaster])
+REFERENCES [dbo].[Equipement] ([idEquipement])
+GO
+
+ALTER TABLE [dbo].[DependanceEquipSSEnsem] CHECK CONSTRAINT [FK_DependanceEquipSSEnsem_Equipement_Master]
+GO
+
+ALTER TABLE [dbo].[DependanceEquipSSEnsem]  WITH CHECK ADD  CONSTRAINT [FK_DependanceEquipSSEnsem_SousEnsemble_Child] FOREIGN KEY([idSousEnsemChild])
+REFERENCES [dbo].[SousEnsemble] ([idSousEnsemble])
+GO
+
+ALTER TABLE [dbo].[DependanceEquipSSEnsem] CHECK CONSTRAINT [FK_DependanceEquipSSEnsem_SousEnsemble_Child]
+GO
+
+ALTER TABLE [dbo].[DependanceEquipSSEnsem]  WITH CHECK ADD  CONSTRAINT [FK_DependanceEquipSSEnsem_SousEnsemble_Master] FOREIGN KEY([idSousEnsemMaster])
+REFERENCES [dbo].[SousEnsemble] ([idSousEnsemble])
+GO
+
+ALTER TABLE [dbo].[DependanceEquipSSEnsem] CHECK CONSTRAINT [FK_DependanceEquipSSEnsem_SousEnsemble_Master]
+GO
+
+ALTER TABLE [dbo].[Equipement]  WITH CHECK ADD  CONSTRAINT [FK_Equipement_Fournisseur_idFournisseur] FOREIGN KEY([idFournisseur])
+REFERENCES [dbo].[Fournisseur] ([idFournisseur])
+GO
+
+ALTER TABLE [dbo].[Equipement] CHECK CONSTRAINT [FK_Equipement_Fournisseur_idFournisseur]
+GO
+
+ALTER TABLE [dbo].[Demande]  WITH CHECK ADD  CONSTRAINT [FK_Demande_UAP_idUAP] FOREIGN KEY([idUAP])
+REFERENCES [dbo].[UAP] ([idUAP])
+GO
+
+ALTER TABLE [dbo].[Demande] CHECK CONSTRAINT [FK_Demande_UAP_idUAP]
+
+ALTER TABLE [dbo].[Demande]  WITH CHECK ADD  CONSTRAINT [FK_Demande_Secteur_idSecteur] FOREIGN KEY([idSecteur])
+REFERENCES [dbo].[Secteur] ([idSecteur])
+GO
+
+ALTER TABLE [dbo].[Demande] CHECK CONSTRAINT [FK_Demande_Secteur_idSecteur]
+GO
+
+ALTER TABLE [dbo].[Intervention]  WITH CHECK ADD  CONSTRAINT [FK_Intervention_Service_idService] FOREIGN KEY([idService])
+REFERENCES [dbo].[Service] ([idService])
+GO
+
+ALTER TABLE [dbo].[Intervention] CHECK CONSTRAINT [FK_Intervention_Service_idService]
+GO
+
+ALTER TABLE [dbo].[Realisation]  WITH CHECK ADD  CONSTRAINT [FK_Realisation_TypeIntervention] FOREIGN KEY([idTypeIntervention])
+REFERENCES [dbo].[TypeIntervention] ([idTypeIntervention])
+GO
+
+ALTER TABLE [dbo].[Realisation] CHECK CONSTRAINT [FK_Realisation_TypeIntervention]
+GO
+
+ALTER TABLE [dbo].[Realisation]  WITH CHECK ADD  CONSTRAINT [FK_Realisation_Domaine] FOREIGN KEY([idDomaine])
+REFERENCES [dbo].[Domaine] ([idDomaine])
+GO
+
+ALTER TABLE [dbo].[Realisation] CHECK CONSTRAINT [FK_Realisation_Domaine]
+GO
+
+ALTER TABLE [dbo].[FichePreventive]  WITH CHECK ADD  CONSTRAINT [FK_FichePreventive_Secteur] FOREIGN KEY([idSecteur])
+REFERENCES [dbo].[Secteur] ([idSecteur])
+GO
+
+ALTER TABLE [dbo].[FichePreventive] CHECK CONSTRAINT [FK_FichePreventive_Secteur]
+GO
+
+ALTER TABLE [dbo].[Intervention] ADD  CONSTRAINT [DF_Intervention_PrevGenere]  DEFAULT (0) FOR [PrevGenere]
+GO
+
+ALTER TABLE [dbo].[TableDomaine]  WITH CHECK ADD  CONSTRAINT [FK_TableDomaine_Domaine] FOREIGN KEY([idDomaine])
+REFERENCES [dbo].[Domaine] ([idDomaine])
+GO
+
+ALTER TABLE [dbo].[TableDomaine] CHECK CONSTRAINT [FK_TableDomaine_Domaine]
+GO
+
+ALTER TABLE [dbo].[TableDomaine]  WITH CHECK ADD  CONSTRAINT [FK_TableDomaine_Intervention] FOREIGN KEY([idIntervention])
+REFERENCES [dbo].[Intervention] ([idIntervention])
+GO
+
+ALTER TABLE [dbo].[TableDomaine] CHECK CONSTRAINT [FK_TableDomaine_Intervention]
+GO
+
+ALTER TABLE [dbo].[Procede]  WITH CHECK ADD  CONSTRAINT [FK_Procede_Secteur] FOREIGN KEY([idSecteur])
+REFERENCES [dbo].[Secteur] ([idSecteur])
+GO
+
+ALTER TABLE [dbo].[Procede] CHECK CONSTRAINT [FK_Procede_Secteur]
+GO
+
+ALTER TABLE [dbo].[Demande]  WITH NOCHECK ADD  CONSTRAINT [FK_Demande_Piece_idPiece] FOREIGN KEY([idPiece])
+REFERENCES [dbo].[Procede] ([idProcede])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Demande] CHECK CONSTRAINT [FK_Demande_Piece_idPiece]
+GO
+
+ALTER TABLE [dbo].[FichePreventive]  WITH NOCHECK ADD  CONSTRAINT [FK_FichePreventive_Piece_idPiece] FOREIGN KEY([idPiece])
+REFERENCES [dbo].[Procede] ([idProcede])
+GO
+
+ALTER TABLE [dbo].[FichePreventive] CHECK CONSTRAINT [FK_FichePreventive_Piece_idPiece]
+GO
+
+ALTER TABLE [dbo].[ReleveCompteur]  WITH CHECK ADD  CONSTRAINT [FK_ReleveCompteur_Compteur] FOREIGN KEY([idCompteur])
+REFERENCES [dbo].[Compteur] ([idCompteur])
+GO
+
+ALTER TABLE [dbo].[ReleveCompteur] CHECK CONSTRAINT [FK_ReleveCompteur_Compteur]
+GO
+
+

@@ -1,0 +1,31 @@
+[Measures].[PM_Cumul]/[Measures].[PM_Nb], FORMAT_STRING="PERCENT10.2"
+
+La formule MDX de  Duree_Intervention_Cumul :
+'SUM( DESCENDANTS( [key].[key].CurrentMember,  [key].[key].[Surrogatekey]),
+[Measures].[Fake_Duree_Inter_Cumul]*[Measures].[Fake_Poids])', FORMAT_STRING="NLNUM15.2"
+
+
+La formule MDX de  Duree_Intervention_Moy :
+'SUM( DESCENDANTS( [key].[key].CurrentMember,  [key].[key].[Surrogatekey]),
+[Measures].[Fake_Duree_Inter_Cumul]*[Measures].[Fake_Poids])/Count(CrossJoin({      [Measures].[Fake_Nb_Inter]}, {Descendants(      [Z_Code_Interventions].[Z_Code_Interventions].CurrentMember,       [Z_Code_Interventions].[Code_Intervention], SELF)}), ExcludeEmpty)', FORMAT_STRING="NLNUM5.2."
+ 
+
+La formule MDX de  Duree_Realisation_Cumul :
+'SUM( DESCENDANTS( [key].[key].CurrentMember,  [key].[key].[Surrogatekey]),
+[Measures].[Fake_Duree_real_Cumul]*[Measures].[Fake_Poids])', FORMAT_STRING="NLNUM15.2"
+
+La formule MDX de  Duree_Realisation_Moy:
+'SUM( DESCENDANTS( [key].[key].CurrentMember,  [key].[key].[Surrogatekey]),
+[Measures].[Fake_Duree_Real_Cumul]*[Measures].[Fake_Poids])/Count(CrossJoin({      [Measures].[Fake_Nb_Inter]}, {Descendants(      [Z_Code_Interventions].[Z_Code_Interventions].CurrentMember,       [Z_Code_Interventions].[Code_Intervention], SELF)}), ExcludeEmpty)', FORMAT_STRING="NLNUM5.2."
+
+La formule MDX de  Duree_Traitement_Cumul :
+'SUM( DESCENDANTS( [key].[key].CurrentMember,  [key].[key].[Surrogatekey]),
+[Measures].[Fake_Duree_Trait]*[Measures].[Fake_Poids])'
+
+La formule MDX de  Duree_Traitement_Moy:
+'SUM( DESCENDANTS( [key].[key].CurrentMember,  [key].[key].[Surrogatekey]),
+[Measures].[Fake_Duree_Trait]*[Measures].[Fake_Poids])/Count(CrossJoin({      [Measures].[Fake_Nb_Inter]}, {Descendants(      [Z_Code_Interventions].[Z_Code_Interventions].CurrentMember,       [Z_Code_Interventions].[Code_Intervention], SELF)}), ExcludeEmpty)', FORMAT_STRING="NLNUM5.2."
+
+La formule MDX de  Nb_Inter:
+'Count(CrossJoin({      [Measures].[Fake_Nb_Inter]}, {Descendants(      [Z_Code_Interventions].[Z_Code_Interventions].CurrentMember,       [Z_Code_Interventions].[Code_Intervention], SELF)}), ExcludeEmpty)'
+

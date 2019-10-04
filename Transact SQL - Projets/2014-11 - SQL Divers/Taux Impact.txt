@@ -1,0 +1,15 @@
+select idprocede, 
+cast(1/(cast(count(idProcede) as decimal(18,2))) as decimal(18,2)) as taux_impact,
+COUNT(idProcede) 
+as Nb_Procede  
+from Equipement group by idprocede
+
+select cast(5/round(2,2) as decimal(10,2))
+
+select cast(round(5/CAST(2 as decimal(10,2)),2) as decimal(10,2))
+
+select idSousEnsemble, 
+cast(1/(cast(count(idEquipement) as decimal(18,2))) as decimal(18,2)) as taux_impact,
+COUNT(idEquipement) 
+as Nb_SousEquipement  
+from SousEnsemble group by idEquipement

@@ -1,0 +1,5 @@
+USE [master]
+GO
+/****** Objet :  Database [GMAO_DEV] ******/
+CREATE DATABASE [GMAO_DEV] 
+

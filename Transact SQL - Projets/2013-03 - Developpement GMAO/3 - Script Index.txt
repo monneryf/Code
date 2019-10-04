@@ -1,0 +1,14 @@
+/****** Object:  Index [IX_Realisation_DebutArret]    Script Date: 07/03/2013 15:14:20 ******/
+CREATE NONCLUSTERED INDEX [IX_Realisation_DebutArret] ON [dbo].[Realisation] 
+(
+	[DebutArret] ASC
+) ON [PRIMARY]
+GO
+
+/****** Object:  Index [IX_Realisation_FinArret]    Script Date: 07/03/2013 15:14:46 ******/
+CREATE NONCLUSTERED INDEX [IX_Realisation_FinArret] ON [dbo].[Realisation] 
+(
+	[FinArret] ASC
+) ON [PRIMARY]
+GO
+

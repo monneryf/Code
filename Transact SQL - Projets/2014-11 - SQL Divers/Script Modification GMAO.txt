@@ -1,0 +1,168 @@
+
+-- Upsize column Intervenants --------------------------------------------------------------------------------------------
+
+alter table action
+alter column Intervenants varchar(100);
+GO
+
+-- Add a column TpsPasse --------------------------------------------------------------------------------------------
+
+alter table dbo.ActionIntervenant
+add TpsPasse decimal(18,2) null
+go
+
+-- Add a column DebutPiece --------------------------------------------------------------------------------------------
+
+alter table dbo.Realisation
+add DebutPiece DateTime null
+go
+
+-- Add a column FinPiece --------------------------------------------------------------------------------------------
+
+kalter table dbo.Realisation
+add FinPiece DateTime null
+go
+
+-- Add a column TempsArretSaisie --------------------------------------------------------------------------------------------
+
+alter table dbo.Realisation
+add TempsArretSaisie Decimal(18,2) null
+go
+
+-- Create a new view Vue_filtre_Realisation --------------------------------------------------------------------------------------------
+
+CREATE VIEW Vue_Filtre_Realisation
+AS
+WITH CumulTpsPasse AS
+(SELECT idIntervention,SUM(TempsPasse) as CumulTps
+	FROM ActiviteIntervenant
+	GROUP BY IdIntervention)
+	
+SELECT 
+	
+	Inter.idIntervention,
+	coalesce(Datediff(Minute,DateCreation,FinInter),0)/60.00 as [Temps Traitement],
+	coalesce(Datediff(Minute,DebutArret,FinArret),0)/60.00 as [Temps Avant Realisation],
+	coalesce(CTP.CumulTps,0) as [Temps Intervention],
+	coalesce(Datediff(Minute,DebutInter,FinInter),0)/60.00 as [Temps Realisation],
+	coalesce(Datediff(Minute,DebutInter,DebutPiece),0)/60.00 as [Temps Commande Pièce],
+	coalesce(Datediff(Minute,DebutPiece,FinPiece),0)/60.00 as [Temps Attente Pièce],
+	coalesce(Datediff(Minute,FinPiece,FinInter),0)/60.00 as [Temps Installation Pièce],
+	coalesce(Datediff(Minute,DebutArret,FinArret),0)/60.00 as [Temps Arrêt Brut],
+	coalesce(TempsArretSaisie,0) as [Temps Arrêt Net],
+	coalesce(Datediff(Minute,DebutArret,FinArret),0)/60.00
+		- coalesce(TempsArretSaisie,0) 
+			as [Temps Arrêt dégradé]
+	
+	FROM dbo.Realisation as Rea
+	INNER JOIN Intervention as Inter
+	ON Rea.idIntervention = Inter.idIntervention
+	LEFT OUTER JOIN CumulTpsPasse as CTP 
+	ON Rea.idIntervention = CTP.idIntervention
+	
+GO
+
+-- Create a new view Vue_filtre_Activite --------------------------------------------------------------------------------------------
+
+CREATE VIEW Vue_Filtre_Activite
+AS
+WITH CumulTps AS
+(SELECT ACT.idIntervention,ACI.idIntervenant,
+	    SUM(ACI.TpsPasse) as TempsP
+
+	FROM dbo.ActionIntervenant as ACI
+	INNER JOIN Action as ACT
+	ON ACI.RefAction = ACT.RefAction
+		
+	GROUP BY ACT.idIntervention,ACI.idIntervenant)
+
+SELECT CTP.idIntervention as [idIntervention],
+	   ITV.Nom as [Nom],
+	   ITV.Prenom as [Prénom],
+	   ITV.NomCourt as [Nom court],
+	   CTP.TempsP as [Temps passé]
+	    
+	FROM CumulTps as CTP
+		INNER JOIN Intervenant as ITV
+		ON CTP.idIntervenant = ITV.idIntervenant
+		
+GO
+
+
+
+
+-- Modify SP NewFP --------------------------------------------------------------------------------------------
+
+/****** Object:  StoredProcedure [dbo].[NewFP]    
+ALTER procedure [dbo].[NewFP](@numFP int) as
+
+declare @TypeMaint int
+declare @Frequence int
+declare @Basculement int
+declare @saison int
+declare @DatePrevisionnel datetime
+declare @DateBasculement datetime
+				
+select @TypeMaint = idTypePlanification from dbo.FichePreventive
+		where idFichePreventive = @NumFP ;
+
+-- Maintenance préventive par relevé de compteur
+if @TypeMaint = 1 
+begin
+	return;
+end
+
+-- Maintenance préventive récurrente
+if @TypeMaint = 2 
+begin
+	select @Frequence = datediff(day,getdate(),DateDebut) 
+		from dbo.FichePreventive
+		where idFichePreventive = @NumFP ;
+end
+
+-- Maintenance préventive par arrêt technique (semestriel)
+if @TypeMaint = 3 
+begin
+	select @Frequence =  datediff(day,getdate(),[Date]) 
+		from dbo.ArretTechnique
+		where EstProchain = -1;
+end
+
+-- Maintenance préventive par arrêt technique d'été
+if @TypeMaint = 4
+begin
+	select @Frequence =  datediff(day,getdate(),[Date]) 
+		from dbo.ArretTechnique
+		where ProchainEte = -1;
+end
+
+-- Maintenance préventive par arrêt technique d'hiver
+if @TypeMaint = 5
+begin
+	select @Frequence =  datediff(day,getdate(),[Date]) 
+		from dbo.ArretTechnique
+		where ProchainHiver = -1;
+end
+	
+set @DatePrevisionnel = getdate() + @Frequence
+
+select @Basculement = DelaiBasculement  from dbo.FichePreventive
+		where idFichePreventive = @NumFP;
+
+set @DateBasculement = @DatePrevisionnel - @Basculement
+
+set @DatePrevisionnel = CAST(FLOOR(CAST(@DatePrevisionnel AS FLOAT)) AS DATETIME)
+set @DateBasculement = CAST(FLOOR(CAST(@DateBasculement AS FLOAT)) AS DATETIME)
+
+insert into demande
+([date],idDemandeur,idTypeDemande,idEquipement,idSousEnsemble,
+idPiece,idUrgence,idPriorite,[Description],idUAP,idSecteur,
+idFichePreventive,DatePrevision,DateBasculement,idService,EtatDemande)
+	select getdate(),1,2,idEquipement,idSousEnsemble,
+	idPiece,5,4,[Description],idUAP,idSecteur,
+	idFichePreventive,@DatePrevisionnel,@DateBasculement,idService,0
+		 from dbo.FichePreventive
+			where idFichePreventive = @numFP
+
+GO
+
