@@ -10,3 +10,5 @@ SELECT A1.*,A2.* FROM [dbo].[Animals] AS A1,
 ;
 GO
 
+
+
