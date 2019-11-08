@@ -1,0 +1,32 @@
+Sub Taille()
+'
+' Macro1 Macro
+'
+Dim Number_Cell As Integer
+Dim Total_Length As Integer
+Dim Total_Height As Integer
+
+Number_Cell = 61
+Number_Columns = 13
+Total_Length = 0
+
+For i = 1 To Number_Cell
+    Cells(i, 1).Activate
+    Total_Length = Total_Length + ActiveCell.RowHeight
+Next i
+
+For j = 1 To Number_Columns
+    Cells(1, j).Activate
+    Total_Height = Total_Height + ActiveCell.ColumnWidth
+Next j
+
+Message = "La longueur totale est de " & Total_Length & vbCrLf & "La hauteur totale est de " & Total_Height
+
+MsgBox (Message)
+
+Cells(Number_Cell + 3, 2).Value = Total_Length & " / " & Total_Height
+
+End Sub
+
+
+
