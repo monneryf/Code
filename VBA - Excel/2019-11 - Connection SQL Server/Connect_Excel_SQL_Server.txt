@@ -1,0 +1,90 @@
+Private Sub CommandButton1_Click()
+
+Dim con As ADODB.Connection
+Dim rs As ADODB.Recordset
+Dim query As String
+Set con = New ADODB.Connection
+Set rs = New ADODB.Recordset
+
+'---- Replace below highlighted names with the corresponding values
+
+strCon = "Provider=SQLOLEDB; " & _
+        "Data Source=DESKTOP-0SJ80TE\SQLEXPRESS; " & _
+        "Initial Catalog=Test;" & _
+        "Integrated Security=SSPI;Persist Security Info=True;"
+
+'---  In Case of a SQL Server Connection
+'---  "User ID=uid; Password=pwd; Trusted_Connection=yes"
+'---  Open   the above connection string.
+
+con.Open (strCon)
+
+'---  Now connection is open and you can use queries to execute them.
+'--- It will be open till you close the connection
+
+Champ_1 = ActiveSheet.Cells(5, 1)
+Champ_2 = ActiveSheet.Cells(5, 2)
+
+strSQL = "INSERT INTO dbo.Animals VALUES('" & Champ_1 & "','" & Champ_2 & "')"
+
+con.Execute (strSQL)
+
+Message = Champ_1 & " et " & Champ_2 & " ont bien été insérés"
+
+MsgBox Message
+
+con.Close
+
+End Sub
+
+Private Sub CommandButton2_Click()
+    Me.Hide
+End Sub
+
+Private Sub ListBox1_Click()
+
+ActiveSheet.Activate
+Cells(1, 1) = Me.ListBox1.Value
+
+End Sub
+
+Private Sub UserForm_Click()
+
+Dim con As ADODB.Connection
+Dim rs As ADODB.Recordset
+Dim query As String
+Set con = New ADODB.Connection
+Set rs = New ADODB.Recordset
+
+'---- Replace below highlighted names with the corresponding values
+
+strCon = "Provider=SQLOLEDB; " & _
+        "Data Source=DESKTOP-0SJ80TE\SQLEXPRESS; " & _
+        "Initial Catalog=Test;" & _
+        "Integrated Security=SSPI;Persist Security Info=True;"
+
+'---  Open   the above connection string.
+
+con.Open (strCon)
+
+'---  Now connection is open and you can use queries to execute them.
+'--- It will be open till you close the connection
+
+strSQL = "SELECT * FROM dbo.Animals"
+
+rs.Open strSQL, con, adOpenStatic, adLockReadOnly
+'Message = "Nombre animal " & rs.RecordCount
+'MsgBox Message
+
+If (rs.RecordCount <> 0) Then
+   Do While Not rs.EOF
+      Me.ListBox1.AddItem (rs.Fields(0).Value)
+      rs.MoveNext
+   Loop
+End If
+
+rs.Close
+con.Close
+
+End Sub
+

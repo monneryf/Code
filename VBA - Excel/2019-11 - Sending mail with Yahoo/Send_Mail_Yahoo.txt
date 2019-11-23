@@ -1,0 +1,95 @@
+Sub SendEmailUsingYahoo()
+
+    On Error GoTo Err
+
+    Dim NewMail As Object
+    Dim mailConfig As Object
+    Dim fields As Variant
+    Dim msConfigURL As String
+
+    Set NewMail = CreateObject("CDO.Message")
+    Set mailConfig = CreateObject("CDO.Configuration")
+
+    ' load all default configurations
+    mailConfig.Load -1
+
+    Set fields = mailConfig.fields
+
+'Set All Email Properties
+
+    With NewMail
+        .Subject = "Test Mail from LearnExcelMacro.com"
+        .From = "email@yahoo.co.in"
+        .To = "email1@gmail.com;email2@yahoo.com"
+        .CC = "email@email.com"
+        .BCC = ""
+        .textbody = ""
+    End With
+
+    msConfigURL = "http://schemas.microsoft.com/cdo/configuration"
+
+    With fields
+        'Enable SSL Authentication
+        .Item(msConfigURL & "/smtpusessl") = True
+
+        'Make SMTP authentication Enabled=true (1)
+        .Item(msConfigURL & "/smtpauthenticate") = 1
+
+        'Set the SMTP server and port Details
+        'To get these details you can get on Settings Page of your yahoo Account
+        .Item(msConfigURL & "/smtpserver") = "smtp.mail.yahoo.com"
+        .Item(msConfigURL & "/smtpserverport") = 465
+        .Item(msConfigURL & "/sendusing") = 2
+
+        'Set your credentials of your yahoo Account
+        .Item(msConfigURL & "/sendusername") = "email@yahoo.co.in"
+        .Item(msConfigURL & "/sendpassword") = "******"
+
+        'Update the configuration fields
+        .Update
+
+    End With
+    NewMail.Configuration = mailConfig
+    NewMail.Send
+    MsgBox ("Mail has been Sent")
+
+Exit_Err:
+
+    Set NewMail = Nothing
+    Set mailConfig = Nothing
+    End
+
+Err:
+    Select Case Err.Number
+
+    Case -2147220973  'Could be because of Internet Connection
+        MsgBox " Could be no Internet Connection !!  -- " & Err.Description
+
+    Case -2147220975  'Incorrect credentials User ID or password
+        MsgBox "Incorrect Credentials !!  -- " & Err.Description
+
+    Case Else   'Rest other errors
+        MsgBox "Error occured while sending the email !!  -- " & Err.Description
+    End Select
+
+    Resume Exit_Err
+
+End Sub
+
+-----------------------------------------------------------------------------------------
+
+With NewMail
+  .Subject = "Test Mail from LearnExcelMacro.com"
+  .From = "vishwamitra01@yahoo.com"
+  .To = "vishwamitra02@gmail.com;info@learnexcelmacro.com"
+  .CC = "vishwamitra01@gmail.com"
+  .BCC = ""
+  .HTMLBody = "Write your complete HTML Page"
+
+' For multiple Attachment you can add below lines as many times
+
+  .AddAttachment "C:\ExcelMacro-help.xls"
+  .AddAttachment "C:\ExcelMacro-help2.xls"
+End With
+
+
