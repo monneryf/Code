@@ -1,0 +1,119 @@
+Attribute VB_Name = "Functions"
+Public Function CheckAnswer()
+
+    Dim Checking As Boolean
+    Dim Message As String
+    
+    Checking = True
+    
+    If MovieForm.TextBoxName.Value = "" Then
+        Checking = False
+        Message = Message & " - Champ Nom Non Rempli - "
+        MovieForm.TextBoxName.ForeColor = RGB(0, 255, 0)
+    End If
+    
+    If MovieForm.ComboCategory.Value = "" Then
+        Checking = False
+        Message = Message & " - Champ Category Non Rempli - " & vbNewLine
+        MovieForm.ComboCategory.BackColor = RGB(0, 255, 0)
+    End If
+    
+    If MovieForm.ComboFamily.Value = "" Then
+        Checking = False
+        Message = Message & " - Champ Family Non Rempli - " & vbNewLine
+        MovieForm.ComboFamily.BackColor = RGB(0, 255, 0)
+    End If
+    
+    If MovieForm.TextBoxDateRelease.Value = "" Then
+        Checking = False
+        Message = Message & " - Champ Date Release Non Rempli - " & vbNewLine
+        MovieForm.TextBoxDateRelease.BackColor = RGB(0, 255, 0)
+    End If
+    
+    If MovieForm.ComboCountry.Value = "" Then
+        Checking = False
+        Message = Message & " - Champ Country Non Rempli - " & vbNewLine
+        MovieForm.ComboCountry.BackColor = RGB(0, 255, 0)
+    End If
+                
+    If MovieForm.TextBoxDateRelease.Value < 1900 Or MovieForm.TextBoxDateRelease.Value > 2100 Then
+        Checking = False
+        Message = Message & " - Champ Date Release incorrect - " & vbNewLine
+        MovieForm.TextBoxDateRelease.BackColor = RGB(0, 255, 0)
+    End If
+        
+    If Checking = False Then
+        MsgBox Message
+    End If
+    
+    If Checking = True Then
+        MovieForm.ComboCategory.BackColor = RGB(255, 255, 255)
+        MovieForm.ComboCountry.BackColor = RGB(255, 255, 255)
+        MovieForm.ComboFamily.BackColor = RGB(255, 255, 255)
+        MovieForm.TextBoxDateRelease.BackColor = RGB(255, 255, 255)
+        MovieForm.TextBoxName.BackColor = RGB(224, 255, 96)
+    End If
+    
+    CheckAnswer = Checking
+        
+End Function
+
+Public Function Is_Good(ByVal category)
+    
+    Dim suffixe As String
+    
+    suffixe = Left(category, 4)
+
+    If suffixe = "Good" Then
+        Is_Good = "TRUE"
+    Else
+        Is_Good = "FALSE"
+    End If
+    
+End Function
+
+Public Function Year_Good(ByVal category)
+
+    Dim postfixe, extension As String
+    
+    If Is_Good(category) Then
+        postfixe = Mid(category, 6, 4)
+    Else
+        postfixe = ""
+    End If
+        
+    Year_Good = postfixe
+    
+End Function
+
+Public Function Insert_Data()
+    
+    Dim name, category, country, family, isgood, yeargood As String
+    Dim strSQL As String
+    
+    Dim date_release As Integer
+    
+    name = MovieForm.TextBoxName
+    date_release = MovieForm.TextBoxDateRelease
+    
+    category = MovieForm.ComboCategory
+    country = MovieForm.ComboCountry
+    family = MovieForm.ComboFamily
+    
+    isgood = Is_Good(category)
+    yeargood = Year_Good(category)
+    
+    strSQL = "INSERT INTO dbo.Movies (title,category,daterelease,family,country,is_good,year_good) "
+    strSQL = strSQL & " VALUES ('"
+    strSQL = strSQL & name & "','"
+    strSQL = strSQL & category & "','"
+    strSQL = strSQL & date_release & "','"
+    strSQL = strSQL & family & "','"
+    strSQL = strSQL & country & "','"
+    strSQL = strSQL & isgood & "','"
+    strSQL = strSQL & yeargood & "');"
+        
+    Insert_Data = strSQL
+    
+End Function
+

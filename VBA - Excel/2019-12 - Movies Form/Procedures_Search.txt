@@ -1,0 +1,45 @@
+Attribute VB_Name = "Procedures_Search"
+Public Sub Search_Movies()
+
+    Dim con As ADODB.Connection
+    Dim rs As ADODB.Recordset
+    
+    Dim strSQL As String
+    Dim motCle As String
+    Dim LastID As Long
+    Dim numLigne As Integer
+    
+    Set con = New ADODB.Connection
+    Set rs = New ADODB.Recordset
+    numLigne = -1
+    
+    strCon = "Provider=SQLOLEDB; " & _
+             "Data Source=DESKTOP-0SJ80TE\SQLEXPRESS; " & _
+             "Initial Catalog=Test;" & _
+             "Integrated Security=SSPI;Persist Security Info=True;"
+            
+    con.Open (strCon)
+    
+    motCle = SearchForm.TextBoxMotCle
+    
+    strSQL = "Select title,category FROM dbo.Movies WHERE title like '%" & motCle & "%';"
+    
+    rs.Open strSQL, con, adOpenStatic, adLockReadOnly
+    
+    SearchForm.ListBoxMovie.Clear
+    
+    If (rs.RecordCount <> 0) Then
+        Do While Not rs.EOF
+            numLigne = numLigne + 1
+            SearchForm.ListBoxMovie.AddItem
+            SearchForm.ListBoxMovie.List(numLigne, 0) = rs.Fields(0)
+            SearchForm.ListBoxMovie.List(numLigne, 1) = rs.Fields(1)
+            rs.MoveNext
+        Loop
+    End If
+    
+    rs.Close
+    con.Close
+
+End Sub
+

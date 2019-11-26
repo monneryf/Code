@@ -1,0 +1,126 @@
+Attribute VB_Name = "Procedures"
+Public Sub InitializeForm()
+    
+    Dim con As ADODB.Connection
+    Dim rs As ADODB.Recordset
+    Dim query As String
+    
+    Set con = New ADODB.Connection
+    Set rs = New ADODB.Recordset
+
+
+    strCon = "Provider=SQLOLEDB; " & _
+             "Data Source=DESKTOP-0SJ80TE\SQLEXPRESS; " & _
+             "Initial Catalog=Test;" & _
+             "Integrated Security=SSPI;Persist Security Info=True;"
+            
+    con.Open (strCon)
+    
+    strSQL = "SELECT distinct Category FROM dbo.Movies"
+    
+    rs.Open strSQL, con, adOpenStatic, adLockReadOnly
+    
+    If (rs.RecordCount <> 0) Then
+        Do While Not rs.EOF
+           MovieForm.ComboCategory.AddItem (rs.Fields(0).Value)
+           rs.MoveNext
+        Loop
+    End If
+                
+    strSQL = "SELECT distinct Family FROM dbo.Movies"
+    
+    rs.Close
+    
+    rs.Open strSQL, con, adOpenStatic, adLockReadOnly
+    
+    If (rs.RecordCount <> 0) Then
+        Do While Not rs.EOF
+           MovieForm.ComboFamily.AddItem (rs.Fields(0).Value)
+           rs.MoveNext
+        Loop
+    End If
+            
+    rs.Close
+            
+    strSQL = "SELECT distinct Country FROM dbo.Movies"
+    
+    rs.Open strSQL, con, adOpenStatic, adLockReadOnly
+    
+    If (rs.RecordCount <> 0) Then
+        Do While Not rs.EOF
+           MovieForm.ComboCountry.AddItem (rs.Fields(0).Value)
+           rs.MoveNext
+        Loop
+    End If
+            
+    rs.Close
+    con.Close
+            
+End Sub
+
+Public Sub New_Record()
+    
+    Dim con As ADODB.Connection
+    Dim rs As ADODB.Recordset
+    Dim query As String
+    
+    Set con = New ADODB.Connection
+    Set rs = New ADODB.Recordset
+
+    strCon = "Provider=SQLOLEDB; " & _
+             "Data Source=DESKTOP-0SJ80TE\SQLEXPRESS; " & _
+             "Initial Catalog=Test;" & _
+             "Integrated Security=SSPI;Persist Security Info=True;"
+            
+    con.Open (strCon)
+    
+    strSQL = Insert_Data()
+    
+    con.Execute (strSQL)
+    
+    con.Close
+    
+End Sub
+
+Public Sub Delete_Last_Insert()
+
+    Dim con As ADODB.Connection
+    Dim rs As ADODB.Recordset
+    Dim strSQL As String
+    Dim LastID As Long
+    
+    Set con = New ADODB.Connection
+    Set rs = New ADODB.Recordset
+
+    strCon = "Provider=SQLOLEDB; " & _
+             "Data Source=DESKTOP-0SJ80TE\SQLEXPRESS; " & _
+             "Initial Catalog=Test;" & _
+             "Integrated Security=SSPI;Persist Security Info=True;"
+            
+    con.Open (strCon)
+    
+    strSQL = "Select Max(idMovie) FROM dbo.Movies"
+    
+    rs.Open strSQL, con, adOpenStatic, adLockReadOnly
+    
+    If (rs.RecordCount <> 0) Then
+        Do While Not rs.EOF
+           LastID = Int(rs.Fields(0).Value)
+           rs.MoveNext
+        Loop
+    End If
+    
+    strSQL = "BEGIN Transaction "
+    strSQL = strSQL & "DELETE FROM dbo.Movies WHERE idMovie=" & LastID & ";"
+    strSQL = strSQL & "IF @@ROWCOUNT = 1 BEGIN COMMIT; END "
+    strSQL = strSQL & "ELSE BEGIN ROLLBACK; END "
+        
+    MsgBox strSQL
+    
+    con.Execute (strSQL)
+    
+    con.Close
+    
+End Sub
+    
+
