@@ -1,0 +1,141 @@
+Attribute VB_Name = "Module1"
+
+Public Sub Read_File()
+
+    Dim strAdresse As String
+    Dim myFile As String, Text, textline As String
+    Dim posLat, posLong As Integer
+    
+    myFile = "E:\OneDrive\Divers\Listes\3 - Liste Films\2019\Archives\Liste_Movie_Globale.txt"
+    posLat = 0
+    
+    Open myFile For Input As #1
+    
+    Do Until EOF(1)
+        Line Input #1, textline
+        posLat = posLat + 1
+        Cells(posLat, 1) = posLat
+        Cells(posLat, 2).Value = textline
+    Loop
+    
+    Close #1
+                
+End Sub
+
+Public Sub Read_File_Bis()
+
+    Dim myFile As String
+
+    myFile = Application.GetOpenFilename()
+
+    MsgBox myFile
+
+End Sub
+
+Public Sub Status_Bar()
+
+    Dim i As Integer, j As Integer, pctCompl As Integer
+    
+    For i = 1 To 20
+        For j = 1 To 5
+            
+            Cells(i, j).Value = WorksheetFunction.RandBetween(20, 100)
+            pctCompl = ((i - 1) * 5) + j
+            Message = "Importing Data.. " & pctCompl & " % Completed"
+            Application.StatusBar = Message
+            Application.Wait Now + TimeValue("00:00:01")
+        
+        Next j
+    Next i
+        
+    Application.StatusBar = False
+        
+End Sub
+
+
+Public Sub Write_File()
+
+    Dim myFile As String
+    Dim rng As Range
+    Dim cellValue As Variant
+    Dim i As Integer, j As Integer
+    
+    'MsgBox Application.DefaultFilePath
+        
+    myFile = "c:\users\monne\Desktop\File.txt"
+    
+    Set rng = Selection
+    
+    Open myFile For Output As #1
+    
+    For i = 1 To rng.Rows.Count
+        For j = 1 To rng.Columns.Count
+            cellValue = Cells(i, j)
+            
+            If j = rng.Columns.Count Then
+                Write #1, cellValue
+            Else
+                Write #1, cellValue,
+            End If
+        Next j
+    Next i
+    
+    Close #1
+    
+End Sub
+
+
+Public Sub Progress_Bar()
+
+    Dim i, j As Integer
+    Dim Progression, milli_second As Double
+    
+    milli_second = 0.000000011574
+    
+    ActiveSheet.Cells.Clear
+    
+    For i = 1 To 10
+        For j = 1 To 10
+            Cells(i, j).Value = WorksheetFunction.RandBetween(0, 100)
+            Progression = (i - 1) * 10 + j
+            Progress (Progression)
+            Application.Wait Now + 600 * milli_second
+        Next j
+    Next i
+
+End Sub
+
+Public Sub Progress(ByVal pct As Integer)
+
+    ProgressIndicator.Text.Caption = pct & " % completed"
+    ProgressIndicator.Bar.Width = pct / 100 * ProgressIndicator.Frame1.Width
+
+    DoEvents
+
+End Sub
+
+Public Sub StartProgress()
+    ProgressIndicator.Show
+End Sub
+
+Public Sub Fast_Fill_Screen()
+
+    Dim i As Integer
+
+    Application.ScreenUpdating = False
+    
+    For i = 1 To 10000
+        Cells(i, 1).Value = i
+    Next i
+    
+    Application.ScreenUpdating = True
+
+    'Application.DisplayAlerts = False
+
+    'ActiveWorkbook.Close
+
+    'Application.DisplayAlerts = True
+
+End Sub
+
+

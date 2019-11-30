@@ -1,0 +1,52 @@
+Attribute VB_Name = "Module1"
+Public Sub UseConnect()
+    
+    Dim rs As New ADODB.Recordset
+    Dim cn As New Connection
+    
+    Dim strSQL As String
+    Dim strBuffer As String
+    
+    strSQL = "SELECT * FROM dbo.Animals;"
+    
+    rs.Open strSQL, cn.connect, adOpenStatic, adLockReadOnly
+    
+    strBuffer = ""
+    
+    If (rs.RecordCount <> 0) Then
+        Do While Not rs.EOF
+           strBuffer = strBuffer & vbNewLine & (rs.Fields(0).value)
+           rs.MoveNext
+        Loop
+    End If
+    
+    MsgBox strBuffer
+    
+End Sub
+
+Public Sub UseConnect_Bis()
+
+    Dim cn As New Connection
+    Dim strSQL As String
+    
+    strSQL = "SELECT * FROM dbo.Animals;"
+    
+    Cells(1, 1).value = cn.getResult(strSQL)
+
+End Sub
+
+Public Sub UseConnect_tiers()
+
+    Dim cn As New Connection
+    
+    champ1 = Cells(2, 1).value
+    champ2 = Cells(2, 2).value
+    
+    strSQL = "INSERT INTO dbo.Animals VALUES('" & champ1 & "','" & champ2 & "')"
+    
+    cn.Command (strSQL)
+
+End Sub
+
+
+

@@ -1,0 +1,17 @@
+Attribute VB_Name = "Module1"
+'Callback for btLance01 onAction
+Sub ProcLancement(control As IRibbonControl)
+
+    MsgBox "Bonjour"
+
+End Sub
+
+'Callback for btAide01 onAction
+Sub OuvertureAide(control As IRibbonControl)
+
+    UserForm1.Show
+
+End Sub
+
+
+

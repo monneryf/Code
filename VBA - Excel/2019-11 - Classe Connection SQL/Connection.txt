@@ -1,0 +1,74 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "Connection"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Dim CurrentConnect As ADODB.Connection
+Dim rs As ADODB.Recordset
+
+Dim strResult As String
+
+Private Sub Class_Initialize()
+
+    Dim strCon As String
+
+    strCon = "Provider=SQLOLEDB; " & _
+             "Data Source=DESKTOP-0SJ80TE\SQLEXPRESS; " & _
+             "Initial Catalog=Test;" & _
+             "Integrated Security=SSPI;Persist Security Info=True;"
+    
+    Set CurrentConnect = New ADODB.Connection
+    
+    CurrentConnect.Open (strCon)
+            
+End Sub
+
+Property Get connect()
+    
+    connect = CurrentConnect
+    
+End Property
+
+Public Function getResult(ByVal strSQL As String)
+    
+    Set rs = New ADODB.Recordset
+    strResult = ""
+    
+    rs.Open strSQL, CurrentConnect, adOpenStatic, adLockReadOnly
+    
+    If (rs.RecordCount <> 0) Then
+        Do While Not rs.EOF
+           strResult = strResult & vbNewLine & (rs.Fields(0).value)
+           rs.MoveNext
+        Loop
+    End If
+
+    getResult = strResult
+    
+    rs.Close
+
+End Function
+
+Public Sub Command(ByVal strSQL As String)
+
+    CurrentConnect.Execute (strSQL), Result
+    
+    If Result Then
+        MsgBox "Opération Success"
+    Else
+        MsgBox "Failure !"
+    End If
+    
+End Sub
+
+Private Sub Class_Terminate()
+    
+    CurrentConnect.Close
+
+End Sub
+
+

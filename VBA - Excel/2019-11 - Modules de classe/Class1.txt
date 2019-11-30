@@ -1,0 +1,32 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "Class1"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Dim WithEvents con As Connection
+Attribute con.VB_VarHelpID = -1
+
+Public Sub con_ValueChange(ByVal PreviousValue As Double)
+    Message = "Compte : " & PreviousValue
+    MsgBox Message
+End Sub
+
+Public Sub Evenement()
+
+    Set con = New Connection
+    
+    con.AjouteCompte (5000)
+    con.Compte = 10000
+
+End Sub
+    
+ 
+
+
+
+
+
