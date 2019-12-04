@@ -1,0 +1,33 @@
+Attribute VB_Name = "Texte"
+
+Public Sub Functions_Texte()
+
+Dim Mot, Mot2 As String
+Dim Position As String
+
+Mot = "Crocodile"
+Position = InStr(1, Mot, "i")
+
+Cells(1, 10).Value = Position
+Cells(2, 10).Value = Mid(Mot, Position, Len(Mot) - Position + 1)
+Cells(3, 10).Value = Replace(Mot, "i", "a")
+
+Position = InStrRev(Mot, "i")
+
+Cells(4, 10).Value = Position
+Cells(5, 10).Value = Split(Mot, "i")
+Cells(6, 10).Value = Trim(Mot)
+Cells(7, 10).Value = UCase(Mot)
+Cells(8, 10).Value = LCase(Mot)
+Cells(9, 10).Value = StrConv(Mot, vbProperCase)
+Cells(10, 10).Value = StrReverse(Mot)
+
+Mot2 = "Crocodilus"
+
+Cells(11, 10).Value = StrComp(Mot, Mot2)
+Cells(12, 10).Value = StrComp(Mot, Mot)
+Cells(13, 10).Value = Mot Like "*r*"
+
+
+End Sub
+

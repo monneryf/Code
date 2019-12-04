@@ -1,0 +1,97 @@
+Attribute VB_Name = "Divers"
+Public Function Nom_Feuille()
+    
+    Nom_Feuille = ActiveSheet.Name
+    
+End Function
+
+Public Function Copie(ByVal empl As String)
+    
+    Copie = empl
+    
+End Function
+
+Public Sub CopieCell()
+
+    Range("A1").Copy Destination:=Range("B2")
+
+End Sub
+
+Public Sub User_Input()
+    
+    Num_Ligne = InputBox("Quelle valeur pour la ligne")
+    
+    Cells(5, 3).Value = Num_Ligne
+    
+End Sub
+
+Public Sub Quantite_Stock()
+
+    Select Case Cells(5, 3)
+        Case 0 To 40
+            Cells(5, 4).Value = "Alligator"
+        Case 40 To 60
+            Cells(5, 4).Value = "Crocodile"
+        Case 60 To 80
+            Cells(5, 4).Value = "Gavial"
+    End Select
+            
+End Sub
+
+Public Sub ligne()
+
+Cells(7, 1).Select
+
+While ActiveCell.Value <> "S"
+    ActiveCell.Value = ActiveCell.Row
+    ActiveCell.Offset(1, 0).Select
+Wend
+
+End Sub
+
+Public Sub Ligne_Bis()
+
+Cells(7, 1).Select
+
+    Do
+        ActiveCell.Value = ActiveCell.Row * 2
+        ActiveCell.Offset(1, 0).Select
+    Loop While ActiveCell.Value <> "S"
+
+End Sub
+
+Public Sub Collec()
+
+    For Each cel In Range("C5:E25")
+        cel.Value = cel.Row & "-" & cel.Column
+        Debug.Print "Resultat Calcul : " & cel.Value
+    Next cel
+
+End Sub
+
+Public Sub Trier()
+
+    Range("C5:E12").Select
+    
+    ActiveWorkbook.Worksheets("Sheet1").Sort.SortFields.Clear
+    
+    ActiveWorkbook.Worksheets("Sheet1").Sort.SortFields.Add Key:=Range("C5:C12") _
+        , SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+    
+    With ActiveWorkbook.Worksheets("Sheet1").Sort
+        .SetRange Range("C5:E12")
+        .Header = xlGuess
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    
+End Sub
+
+Public Function chemin()
+
+    chemin = ActiveWorkbook.Path
+
+End Function
+

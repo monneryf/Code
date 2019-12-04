@@ -1,0 +1,35 @@
+Attribute VB_Name = "Liaison_Externe"
+Public Sub Liaison_Externe()
+
+Dim chemin As String
+Dim monclasseur As String
+Dim mafeuille As String
+Dim macell As String
+Dim maformule As String
+
+chemin = "E:\Data\Data Excel\Sites Epalia\"
+monclasseur = "Site_2.xlsx"
+mafeuille = "Sheet1"
+macell = Cells(10, 5).Address
+
+maformule = "='" & chemin & "[" & monclasseur & "]" & mafeuille & "'!" & macell
+MsgBox maformule
+
+Range("J1") = maformule
+
+Range("J1").Copy
+Range("J1").PasteSpecial xlPasteValues
+Application.CutCopyMode = False
+
+End Sub
+
+Public Sub RDB_Workbook_To_PDF()
+
+    Dim FileName As String
+    
+    FileName = RDB_Create_PDF(ActiveWorkbook, "", True, True)
+
+End Sub
+
+
+

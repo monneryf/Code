@@ -1,0 +1,55 @@
+Attribute VB_Name = "Fichier"
+Public Sub Ouverture_Fichier()
+
+Dim Ref As String * 6
+Dim CP As String * 5
+Dim Nom As String * 15
+
+Dim chemin As String
+Dim ligne As Integer
+
+chemin = ActiveWorkbook.Path & "\Fichier_Sortie.txt"
+
+Open chemin For Output As #1
+
+ligne = 1
+
+While Cells(ligne, 1).Value <> ""
+    Ref = Cells(ligne, 1)
+    Nom = Cells(ligne, 2)
+    CP = Cells(ligne, 3)
+    
+    Print #1, Ref & " - " & Nom & " - " & CP
+    ligne = ligne + 1
+Wend
+    
+Close #1
+    
+End Sub
+
+
+End Sub
+Public Sub Lecture_Fichier()
+
+Dim chemin As String
+Dim ligne As Long
+Dim LArray() As String
+
+chemin = ActiveWorkbook.Path & "\Fichier_Sortie.txt"
+
+Open chemin For Input As #1
+
+ligne = Cells(Rows.Count, 1).End(xlUp).Row + 2
+
+While Not EOF(1)
+     Line Input #1, Chaine_Lue
+     LArray = Split(Chaine_Lue, "-")
+     Cells(ligne, 1).Value = LArray(0)
+     Cells(ligne, 2).Value = LArray(1)
+     Cells(ligne, 3).Value = LArray(2)
+     ligne = ligne + 1
+Wend
+
+End Sub
+
+

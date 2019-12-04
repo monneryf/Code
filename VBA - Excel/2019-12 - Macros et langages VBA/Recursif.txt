@@ -1,0 +1,48 @@
+Attribute VB_Name = "Recursif"
+Public oFSO, oFld, oSubFolder
+Public Tab_Rep() As String
+Public i As Long
+
+
+Public Sub ParcoursRepT()
+    Dim chemin As String
+    chemin = "C:\Users\monne\Dropbox\Personnel\Roman"
+    Set oFSO = CreateObject("Scripting.FileSystemObject")
+    i = 0
+    Call ParcoursRep(chemin)
+
+End Sub
+
+
+Public Sub ParcoursRep(ByVal stRep As String)
+On Error GoTo Traitement_Erreur
+
+If oFSO.FolderExists(stRep) Then
+    Set oFld = oFSO.GetFolder(stRep)
+    
+    If oFld.SubFolders.Count > 0 Then
+        
+        For Each oSubFolder In oFld.SubFolders
+            ReDim Preserve Tab_Rep(i)
+            Tab_Rep(i) = oSubFolder.Path
+            'Tab_Rep(i, 2) = FileLen(oSubFolder)
+            'Tab_Rep(i, 3) = FileDateTime(oSubFolder)
+            i = i + 1
+            DoEvents
+            
+            ParcoursRep oSubFolder.Path
+        Next
+    End If
+End If
+
+For a = LBound(Tab_Rep) To UBound(Tab_Rep)
+    Cells(a + 1, 1).Value = Tab_Rep(a)
+    'Cells(a, 2) = Tab_Rep(a, 2)
+    'Cells(a, 3) = Tab_Rep(a, 3)
+Next a
+
+Traitement_Erreur:
+    Debug.Print Err.Number & " " & Err.Description
+    Resume Next
+End Sub
+

@@ -1,0 +1,45 @@
+Attribute VB_Name = "Module1"
+Sub SingleColumnTable_To_Array()
+
+Dim myTable As ListObject
+Dim myArray As Variant
+Dim TempArray As Variant
+Dim x As Long
+
+Dim length, width As Integer
+
+'Set path for Table variable
+  Set myTable = ActiveSheet.ListObjects("Table1")
+
+length = myTable.ListRows.Count
+width = myTable.ListColumns.Count
+
+'Create Array List from Table
+  TempArray = myTable.DataBodyRange
+  
+'Convert from vertical to horizontal array list
+  myArray = Application.Transpose(TempArray)
+
+'Loop through each item in the Table Array (displayed in Immediate Window [ctrl + g])
+Worksheets(2).Select
+Cells(1, 1).Select
+
+' Print indices of new tab
+  For x = LBound(myArray) To UBound(myArray)
+    ActiveCell.Value = x
+    ActiveCell.Offset(1, 0).Activate
+  Next x
+    
+' Print the new tab
+Worksheets(3).Select
+Worksheets(3).Cells.Clear
+  
+  For x = 1 To width
+    For y = 1 To length
+        Cells(x, y).Value = myArray(x, y)
+    Next y
+  Next x
+  
+End Sub
+
+
